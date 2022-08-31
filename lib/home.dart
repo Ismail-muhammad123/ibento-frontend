@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:ibento/pages/bookings.dart';
+import 'package:ibento/pages/bookings_calender.dart';
+import 'package:ibento/pages/dashboard.dart';
+import 'package:ibento/pages/new_booking.dart';
+import './widgets/widgets.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -9,18 +14,24 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool menuExpanded = true;
-
+  int selectedWidget = 0;
+  List<Widget> pages = const [
+    Dashboard(),
+    Bookings(),
+    NewBooking(),
+    BookingsCalender(),
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body: SizedBox(
         width: double.maxFinite,
         height: double.maxFinite,
         child: Row(
           children: [
             AnimatedContainer(
-              duration: Duration(milliseconds: 500),
-              color: Color.fromARGB(255, 0, 42, 75),
+              duration: const Duration(milliseconds: 500),
+              color: const Color.fromARGB(255, 0, 42, 75),
               height: double.maxFinite,
               width: menuExpanded ? 250.0 : 70,
               child: Column(
@@ -32,7 +43,7 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         IconButton(
-                          icon: Icon(Icons.calendar_today),
+                          icon: const Icon(Icons.calendar_today),
                           color: Colors.white,
                           onPressed: () => setState(() => menuExpanded
                               ? menuExpanded = false
@@ -41,7 +52,7 @@ class _HomePageState extends State<HomePage> {
                         menuExpanded
                             ? Text(
                                 "Ibento Tech".toUpperCase(),
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 26.0,
                                   fontWeight: FontWeight.w600,
@@ -51,26 +62,43 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                   ),
-                  Divider(
+                  const Divider(
                     color: Colors.grey,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 12.0,
                   ),
-                  MenuTile(
-                    title: "Dashboard",
-                    icon: Icons.calendar_month,
-                    expanded: menuExpanded,
+                  GestureDetector(
+                    onTap: () => setState(() => selectedWidget = 0),
+                    child: MenuTile(
+                      title: "Dashboard",
+                      icon: Icons.calendar_month,
+                      expanded: menuExpanded,
+                    ),
                   ),
-                  MenuTile(
-                    title: "Bookings",
-                    icon: Icons.book_online,
-                    expanded: menuExpanded,
+                  GestureDetector(
+                    onTap: () => setState(() => selectedWidget = 1),
+                    child: MenuTile(
+                      title: "Bookings",
+                      icon: Icons.book_online,
+                      expanded: menuExpanded,
+                    ),
                   ),
-                  MenuTile(
-                    title: "Calender",
-                    icon: Icons.calendar_view_month_rounded,
-                    expanded: menuExpanded,
+                  GestureDetector(
+                    onTap: (() => setState(() => selectedWidget = 2)),
+                    child: MenuTile(
+                      title: "New Booking",
+                      icon: Icons.add,
+                      expanded: menuExpanded,
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () => setState(() => selectedWidget = 3),
+                    child: MenuTile(
+                      title: "Calender",
+                      icon: Icons.calendar_view_month_rounded,
+                      expanded: menuExpanded,
+                    ),
                   ),
                   MenuTile(
                     title: "Profile",
@@ -82,7 +110,7 @@ class _HomePageState extends State<HomePage> {
                     icon: Icons.settings,
                     expanded: menuExpanded,
                   ),
-                  Spacer(),
+                  const Spacer(),
                   MenuTile(
                     title: "Logout",
                     icon: Icons.logout,
@@ -93,143 +121,9 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Expanded(
-              child: Container(
-                width: double.maxFinite,
-                padding: EdgeInsets.all(12.0),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: DashboardMetricsCard(
-                            label: "Total Bookings",
-                            value: 15,
-                          ),
-                        ),
-                        Expanded(
-                          child: DashboardMetricsCard(
-                            label: "Canceled",
-                            value: 6,
-                          ),
-                        ),
-                        Expanded(
-                          child: DashboardMetricsCard(
-                            label: "Missed",
-                            value: 9,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+              child: pages[selectedWidget],
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class DashboardMetricsCard extends StatelessWidget {
-  final int value;
-  final String label;
-  const DashboardMetricsCard({
-    Key? key,
-    required this.label,
-    required this.value,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        height: 100.0,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5.0),
-          color: Colors.blue,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                value.toString(),
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 26.0,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-            Text(
-              label,
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class MenuTile extends StatelessWidget {
-  final String title;
-  final IconData icon;
-  bool expanded;
-  Color color;
-  MenuTile({
-    Key? key,
-    required this.title,
-    required this.icon,
-    this.color = Colors.white,
-    this.expanded = true,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Container(
-        child: Padding(
-          padding: const EdgeInsets.only(
-            left: 10.0,
-          ),
-          child: Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Icon(
-                  icon,
-                  color: Colors.grey,
-                ),
-              ),
-              expanded
-                  ? Text(
-                      title,
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 20.0,
-                      ),
-                    )
-                  : Container(),
-            ],
-          ),
-        ),
-        width: double.maxFinite,
-        height: 50.0,
-        decoration: BoxDecoration(
-          border: Border(
-            left: BorderSide(
-              width: 5.0,
-              color: color,
-            ),
-          ),
         ),
       ),
     );

@@ -32,6 +32,7 @@ dependencies:
   syncfusion_flutter_datagrid:
   syncfusion_flutter_core:
   syncfusion_flutter_pdf:
+  intl:
   flutter:
     sdk: flutter
 
