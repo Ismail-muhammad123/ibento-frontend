@@ -70,24 +70,24 @@ class _BookingsCalenderState extends State<BookingsCalender> {
         children: [
           Expanded(
             child: SfCalendar(
-              onTap: (details) {
-                DateTime date = details.date!;
-                dynamic appointments = details.appointments;
-                CalendarElement view = details.targetElement;
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return Dialog(
-                      child: SizedBox(
-                        width: 500.0,
-                        child: NewBooking(
-                          dateTime: date,
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
+              // onTap: (details) {
+              //   DateTime date = details.date!;
+              //   dynamic appointments = details.appointments;
+              //   CalendarElement view = details.targetElement;
+              //   showDialog(
+              //     context: context,
+              //     builder: (context) {
+              //       return Dialog(
+              //         child: SizedBox(
+              //           width: 500.0,
+              //           child: NewBooking(
+              //             dateTime: date,
+              //           ),
+              //         ),
+              //       );
+              //     },
+              //   );
+              // },
               showNavigationArrow: true,
               showDatePickerButton: true,
               monthViewSettings: const MonthViewSettings(

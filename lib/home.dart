@@ -43,7 +43,11 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         IconButton(
-                          icon: const Icon(Icons.calendar_today),
+                          icon: Image.asset(
+                            'images/icon.png',
+                            width: 100,
+                            height: 100,
+                          ),
                           color: Colors.white,
                           onPressed: () => setState(() => menuExpanded
                               ? menuExpanded = false

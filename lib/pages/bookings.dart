@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ibento/pages/details.dart';
 import 'package:ibento/pages/new_booking.dart';
 
 class Bookings extends StatelessWidget {
@@ -64,7 +65,7 @@ class Bookings extends StatelessWidget {
             Padding(padding: EdgeInsets.all(8.0)),
             Divider(),
             Text(
-              "Recent Bookings".toUpperCase(),
+              "Bookings".toUpperCase(),
               style: TextStyle(
                 color: Colors.blue,
                 fontSize: 24.0,
@@ -99,171 +100,95 @@ class Bookings extends StatelessWidget {
                       DataColumn(
                         label: Text("Date Scheduled"),
                       ),
+                      DataColumn(
+                        label: Text("Actions"),
+                      )
                     ],
-                    rows: [
-                      DataRow(
+                    rows: List.generate(
+                      13,
+                      (index) => DataRow(
                         cells: [
                           DataCell(Text("Wedding cup")),
                           DataCell(Text("Ismail Muhammad")),
                           DataCell(Text("08163351109")),
                           DataCell(Text("31/08/2022")),
                           DataCell(Text("20/09/2022")),
+                          DataCell(
+                            PopupMenuButton(
+                              itemBuilder: (context) => [
+                                PopupMenuItem(
+                                  child: MaterialButton(
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => BookingDetails(),
+                                      );
+                                    },
+                                    child: Text("Edit"),
+                                  ),
+                                ),
+                                PopupMenuItem(
+                                  child: MaterialButton(
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          content: Text(
+                                              "Are your sure You want to check in this booking?"),
+                                          actions: [
+                                            MaterialButton(
+                                              color: Colors.blueGrey,
+                                              child: Text("No"),
+                                              onPressed: () =>
+                                                  Navigator.of(context).pop(),
+                                            ),
+                                            MaterialButton(
+                                              color: Colors.blue,
+                                              child: Text("Yes"),
+                                              onPressed: () =>
+                                                  Navigator.of(context).pop(),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                    child: Text("Check IN"),
+                                  ),
+                                ),
+                                PopupMenuItem(
+                                  child: MaterialButton(
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          content: Text(
+                                              "Are your sure You want to cancel this booking?"),
+                                          actions: [
+                                            MaterialButton(
+                                              color: Colors.blueGrey,
+                                              child: Text("No"),
+                                              onPressed: () =>
+                                                  Navigator.of(context).pop(),
+                                            ),
+                                            MaterialButton(
+                                              color: Colors.blue,
+                                              child: Text("Yes"),
+                                              onPressed: () =>
+                                                  Navigator.of(context).pop(),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                    child: Text("Cancel"),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
-                      DataRow(
-                        cells: [
-                          DataCell(Text("Wedding cup")),
-                          DataCell(Text("Ismail Muhammad")),
-                          DataCell(Text("08163351109")),
-                          DataCell(Text("31/08/2022")),
-                          DataCell(Text("20/09/2022")),
-                        ],
-                      ),
-                      DataRow(
-                        cells: [
-                          DataCell(Text("Wedding cup")),
-                          DataCell(Text("Ismail Muhammad")),
-                          DataCell(Text("08163351109")),
-                          DataCell(Text("31/08/2022")),
-                          DataCell(Text("20/09/2022")),
-                        ],
-                      ),
-                      DataRow(
-                        cells: [
-                          DataCell(Text("Wedding cup")),
-                          DataCell(Text("Ismail Muhammad")),
-                          DataCell(Text("08163351109")),
-                          DataCell(Text("31/08/2022")),
-                          DataCell(Text("20/09/2022")),
-                        ],
-                      ),
-                      DataRow(
-                        cells: [
-                          DataCell(Text("Wedding cup")),
-                          DataCell(Text("Ismail Muhammad")),
-                          DataCell(Text("08163351109")),
-                          DataCell(Text("31/08/2022")),
-                          DataCell(Text("20/09/2022")),
-                        ],
-                      ),
-                      DataRow(
-                        cells: [
-                          DataCell(Text("Wedding cup")),
-                          DataCell(Text("Ismail Muhammad")),
-                          DataCell(Text("08163351109")),
-                          DataCell(Text("31/08/2022")),
-                          DataCell(Text("20/09/2022")),
-                        ],
-                      ),
-                      DataRow(
-                        cells: [
-                          DataCell(Text("Wedding cup")),
-                          DataCell(Text("Ismail Muhammad")),
-                          DataCell(Text("08163351109")),
-                          DataCell(Text("31/08/2022")),
-                          DataCell(Text("20/09/2022")),
-                        ],
-                      ),
-                      DataRow(
-                        cells: [
-                          DataCell(Text("Wedding cup")),
-                          DataCell(Text("Ismail Muhammad")),
-                          DataCell(Text("08163351109")),
-                          DataCell(Text("31/08/2022")),
-                          DataCell(Text("20/09/2022")),
-                        ],
-                      ),
-                      DataRow(
-                        cells: [
-                          DataCell(Text("Wedding cup")),
-                          DataCell(Text("Ismail Muhammad")),
-                          DataCell(Text("08163351109")),
-                          DataCell(Text("31/08/2022")),
-                          DataCell(Text("20/09/2022")),
-                        ],
-                      ),
-                      DataRow(
-                        cells: [
-                          DataCell(Text("Wedding cup")),
-                          DataCell(Text("Ismail Muhammad")),
-                          DataCell(Text("08163351109")),
-                          DataCell(Text("31/08/2022")),
-                          DataCell(Text("20/09/2022")),
-                        ],
-                      ),
-                      DataRow(
-                        cells: [
-                          DataCell(Text("Wedding cup")),
-                          DataCell(Text("Ismail Muhammad")),
-                          DataCell(Text("08163351109")),
-                          DataCell(Text("31/08/2022")),
-                          DataCell(Text("20/09/2022")),
-                        ],
-                      ),
-                      DataRow(
-                        cells: [
-                          DataCell(Text("Wedding cup")),
-                          DataCell(Text("Ismail Muhammad")),
-                          DataCell(Text("08163351109")),
-                          DataCell(Text("31/08/2022")),
-                          DataCell(Text("20/09/2022")),
-                        ],
-                      ),
-                      DataRow(
-                        cells: [
-                          DataCell(Text("Wedding cup")),
-                          DataCell(Text("Ismail Muhammad")),
-                          DataCell(Text("08163351109")),
-                          DataCell(Text("31/08/2022")),
-                          DataCell(Text("20/09/2022")),
-                        ],
-                      ),
-                      DataRow(
-                        cells: [
-                          DataCell(Text("Wedding cup")),
-                          DataCell(Text("Ismail Muhammad")),
-                          DataCell(Text("08163351109")),
-                          DataCell(Text("31/08/2022")),
-                          DataCell(Text("20/09/2022")),
-                        ],
-                      ),
-                      DataRow(
-                        cells: [
-                          DataCell(Text("Wedding cup")),
-                          DataCell(Text("Ismail Muhammad")),
-                          DataCell(Text("08163351109")),
-                          DataCell(Text("31/08/2022")),
-                          DataCell(Text("20/09/2022")),
-                        ],
-                      ),
-                      DataRow(
-                        cells: [
-                          DataCell(Text("Wedding cup")),
-                          DataCell(Text("Ismail Muhammad")),
-                          DataCell(Text("08163351109")),
-                          DataCell(Text("31/08/2022")),
-                          DataCell(Text("20/09/2022")),
-                        ],
-                      ),
-                      DataRow(
-                        cells: [
-                          DataCell(Text("Wedding cup")),
-                          DataCell(Text("Ismail Muhammad")),
-                          DataCell(Text("08163351109")),
-                          DataCell(Text("31/08/2022")),
-                          DataCell(Text("20/09/2022")),
-                        ],
-                      ),
-                      DataRow(
-                        cells: [
-                          DataCell(Text("Wedding cup")),
-                          DataCell(Text("Ismail Muhammad")),
-                          DataCell(Text("08163351109")),
-                          DataCell(Text("31/08/2022")),
-                          DataCell(Text("20/09/2022")),
-                        ],
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ),
