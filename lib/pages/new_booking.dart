@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:ibento/data/data.dart';
 import 'package:ibento/data/sample_data.dart';
 import 'package:intl/intl.dart';
 
 class NewBooking extends StatefulWidget {
-  const NewBooking({Key? key}) : super(key: key);
+  NewBooking({
+    Key? key,
+    this.dateTime,
+  }) : super(key: key);
+
+  DateTime? dateTime;
 
   @override
   State<NewBooking> createState() => _NewBookingState();
@@ -101,6 +107,15 @@ class _NewBookingState extends State<NewBooking> {
   }
 
   @override
+  void initState() {
+    _dateController.text =
+        DateFormat('MMM d, yyyy').format(widget.dateTime ?? selectedDate);
+    _startTimeController.text =
+        DateFormat.jm().format(widget.dateTime ?? selectedDate);
+    super.initState();
+  }
+
+  @override
   void dispose() {
     _dateController.dispose();
     _startTimeController.dispose();
@@ -110,224 +125,241 @@ class _NewBookingState extends State<NewBooking> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      label: Text("Name"),
-                    ),
+    return Padding(
+      padding: const EdgeInsets.all(18.0),
+      child: Form(
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Text(
+                  "New Booking",
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      label: Text("Phone Number"),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      label: Text("Email (optionl)"),
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      label: Text("Address (optional) "),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      label: Text("Booking Title (optional)"),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    controller: _dateController,
-                    onTap: () {
-                      _selectDate(context).then(
-                        (value) => setState(
-                          () => _dateController.text = getDate(),
-                        ),
-                      );
-                    },
-                    decoration: InputDecoration(
-                      label: Text("Event Date"),
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    controller: _startTimeController,
-                    onTap: () => _selectStartTime(context).then(
-                      (value) => setState(
-                        () {
-                          _startTimeController.text = getTime(value);
-                        },
+              ],
+            ),
+            Divider(),
+            Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        label: Text("Name"),
                       ),
                     ),
-                    decoration: InputDecoration(
-                      label: Text("Start Time"),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        label: Text("Phone Number"),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        label: Text("Email (optionl)"),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    controller: _finishTimeController,
-                    onTap: () => _selectStartTime(context).then(
-                      (value) => setState(
-                        () {
-                          _finishTimeController.text = getTime(value);
-                        },
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        label: Text("Address (optional) "),
                       ),
                     ),
-                    decoration: InputDecoration(
-                      label: Text("Finish Time"),
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        label: Text("Booking Title (optional)"),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              Text("Repeat:"),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Checkbox(
-                  value: repeat,
-                  onChanged: (val) => setState(
-                    () => repeat = val as bool,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: DropdownButton(
-                    value: repeatPattern,
-                    items: [
-                      DropdownMenuItem(
-                        child: Text("Daily"),
-                        value: 0,
-                      ),
-                      DropdownMenuItem(
-                        child: Text("Weekly"),
-                        value: 1,
-                      ),
-                      DropdownMenuItem(
-                        child: Text("Monthly"),
-                        value: 2,
-                      ),
-                    ],
-                    onChanged: repeat
-                        ? (v) => setState(() => repeatPattern = v as int)
-                        : null,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: DropdownButton(
-                    hint: Text("Assigned Venue"),
-                    value: assignedVenue,
-                    items: sample_venues
-                        .map(
-                          (e) => DropdownMenuItem(
-                            child: Text(e.name),
-                            value: e,
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      controller: _dateController,
+                      onTap: () {
+                        _selectDate(context).then(
+                          (value) => setState(
+                            () => _dateController.text = getDate(),
                           ),
-                        )
-                        .toList(),
-                    onChanged: (v) =>
-                        setState(() => assignedVenue = v as Venue),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    keyboardType: TextInputType.datetime,
-                    decoration: InputDecoration(
-                      label: Text("Amount Paid"),
+                        );
+                      },
+                      decoration: InputDecoration(
+                        label: Text("Event Date"),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      label: Text("Balance"),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      // initialValue: getTime(
+                      //   TimeOfDay(
+                      //     hour: widget.dateTime!.hour,
+                      //     minute: widget.dateTime!.minute,
+                      //   ),
+                      // ),
+                      controller: _startTimeController,
+                      onTap: () => _selectStartTime(context).then(
+                        (value) => setState(
+                          () {
+                            _startTimeController.text = getTime(value);
+                          },
+                        ),
+                      ),
+                      decoration: InputDecoration(
+                        label: Text("Start Time"),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: MaterialButton(
-                  onPressed: () {},
-                  child: Text("Save"),
-                  color: Colors.green,
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      controller: _finishTimeController,
+                      onTap: () => _selectStartTime(context).then(
+                        (value) => setState(
+                          () {
+                            _finishTimeController.text = getTime(value);
+                          },
+                        ),
+                      ),
+                      decoration: InputDecoration(
+                        label: Text("Finish Time"),
+                      ),
+                    ),
+                  ),
                 ),
-              )
-            ],
-          )
-        ],
+              ],
+            ),
+            Row(
+              children: [
+                Text("Repeat:"),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Checkbox(
+                    value: repeat,
+                    onChanged: (val) => setState(
+                      () => repeat = val as bool,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: DropdownButton(
+                      value: repeatPattern,
+                      items: [
+                        DropdownMenuItem(
+                          child: Text("Daily"),
+                          value: 0,
+                        ),
+                        DropdownMenuItem(
+                          child: Text("Weekly"),
+                          value: 1,
+                        ),
+                        DropdownMenuItem(
+                          child: Text("Monthly"),
+                          value: 2,
+                        ),
+                      ],
+                      onChanged: repeat
+                          ? (v) => setState(() => repeatPattern = v as int)
+                          : null,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      enabled: repeat,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        suffix: Text("times"),
+                        label: Text("Number of repetations"),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      keyboardType: TextInputType.datetime,
+                      decoration: InputDecoration(
+                        label: Text("Amount Paid"),
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        label: Text("Balance"),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Spacer(),
+            MaterialButton(
+              onPressed: () {},
+              height: 50,
+              minWidth: 250,
+              child: Text("Save"),
+              color: Colors.blue,
+            )
+          ],
+        ),
       ),
     );
   }

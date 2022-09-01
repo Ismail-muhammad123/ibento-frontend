@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
+import 'new_booking.dart';
+
 class BookingsCalender extends StatefulWidget {
   const BookingsCalender({Key? key}) : super(key: key);
 
@@ -9,15 +11,50 @@ class BookingsCalender extends StatefulWidget {
 }
 
 class _BookingsCalenderState extends State<BookingsCalender> {
-  List<Meeting> _getDataSource() {
-    final List<Meeting> meetings = <Meeting>[];
-    final DateTime today = DateTime.now();
-    final DateTime startTime = DateTime(today.year, today.month, today.day, 12);
-    final DateTime endTime = startTime.add(const Duration(hours: 2));
-    meetings.add(
-        Meeting('Match', startTime, endTime, const Color(0xFF0F8644), false));
-    return meetings;
-  }
+  List<Meeting> bookings = [
+    Meeting(
+      'Match',
+      DateTime(2022, 9, 2, 20),
+      DateTime(2022, 9, 2, 20, 40),
+      const Color(0xFF0F8644),
+      false,
+    ),
+    Meeting(
+      'Match',
+      DateTime(2022, 9, 4, 5),
+      DateTime(2022, 9, 4, 5, 40),
+      const Color(0xFF0F8644),
+      false,
+    ),
+    Meeting(
+      'Match',
+      DateTime(2022, 9, 3, 22),
+      DateTime(2022, 9, 3, 22, 40),
+      const Color(0xFF0F8644),
+      false,
+    ),
+    Meeting(
+      'Match',
+      DateTime(2022, 9, 7, 7),
+      DateTime(2022, 9, 7, 7, 40),
+      const Color(0xFF0F8644),
+      false,
+    ),
+    Meeting(
+      'Match',
+      DateTime(2022, 9, 8, 12),
+      DateTime(2022, 9, 8, 12, 40),
+      const Color(0xFF0F8644),
+      false,
+    ),
+    Meeting(
+      'Match',
+      DateTime(2022, 9, 6, 21),
+      DateTime(2022, 9, 6, 21, 40),
+      const Color(0xFF0F8644),
+      false,
+    ),
+  ];
 
   CalendarView calenderView = CalendarView.month;
 
@@ -25,61 +62,46 @@ class _BookingsCalenderState extends State<BookingsCalender> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 0, 42, 75),
+        elevation: 0,
+        backgroundColor: Color.fromARGB(255, 0, 91, 161),
         title: const Text("Bookings Calender"),
       ),
       body: Column(
         children: [
-          Container(
-            padding: EdgeInsets.all(12.0),
-            color: Color.fromARGB(255, 238, 238, 238),
-            width: double.maxFinite,
-            child: Row(
-              children: [
-                Text("Calender View"),
-                Spacer(),
-                MaterialButton(
-                  onPressed: () => setState(
-                    () => calenderView = CalendarView.month,
-                  ),
-                  child: Text("Month"),
-                ),
-                MaterialButton(
-                  onPressed: () => setState(
-                    () => calenderView = CalendarView.timelineMonth,
-                  ),
-                  child: Text("Timeline month"),
-                ),
-                MaterialButton(
-                  onPressed: () => setState(
-                    () => calenderView = CalendarView.day,
-                  ),
-                  child: Text("day"),
-                ),
-                MaterialButton(
-                  onPressed: () => setState(
-                    () => calenderView = CalendarView.timelineDay,
-                  ),
-                  child: Text("Day Timeline"),
-                ),
-                MaterialButton(
-                  onPressed: () => setState(
-                    () => calenderView = CalendarView.week,
-                  ),
-                  child: Text("Day Timeline"),
-                ),
-              ],
-            ),
-          ),
           Expanded(
             child: SfCalendar(
+              onTap: (details) {
+                DateTime date = details.date!;
+                dynamic appointments = details.appointments;
+                CalendarElement view = details.targetElement;
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return Dialog(
+                      child: SizedBox(
+                        width: 500.0,
+                        child: NewBooking(
+                          dateTime: date,
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
               showNavigationArrow: true,
               showDatePickerButton: true,
               monthViewSettings: const MonthViewSettings(
                 appointmentDisplayMode: MonthAppointmentDisplayMode.appointment,
               ),
-              view: calenderView,
-              dataSource: MeetingDataSource(_getDataSource()),
+              view: CalendarView.week,
+              allowedViews: const [
+                CalendarView.day,
+                CalendarView.week,
+                CalendarView.workWeek,
+                CalendarView.month,
+                CalendarView.schedule,
+              ],
+              dataSource: MeetingDataSource(bookings),
             ),
           ),
         ],

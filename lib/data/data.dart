@@ -48,28 +48,28 @@ class EventDataSource extends CalendarDataSource {
 /// information about the event data which will be rendered in calendar.
 class Event {
   /// Creates a meeting class with required details.
-  Event(
-    this.eventName,
-    this.from,
-    this.to,
-    this.background,
-    this.isAllDay,
-    this.createdAt,
-    this.assignedVenue,
-    this.ammendments,
-    this.name,
-    this.email,
-    this.phoneNumber,
-    this.address,
-    this.paymentMethod,
-    this.amountPayed,
-    this.balance,
-    this.status,
-    this.refunded,
-    this.amountRefunded,
-    this.checkInTime,
-    this.checkoutTime,
-  );
+  Event({
+    required this.eventName,
+    required this.from,
+    required this.to,
+    required this.background,
+    required this.isAllDay,
+    required this.createdAt,
+    required this.assignedVenue,
+    required this.ammendments,
+    required this.name,
+    required this.email,
+    required this.phoneNumber,
+    required this.address,
+    required this.paymentMethod,
+    required this.amountPayed,
+    required this.balance,
+    required this.status,
+    required this.refunded,
+    required this.amountRefunded,
+    required this.checkInTime,
+    required this.checkoutTime,
+  });
 
   /// Event name which is equivalent to subject property of [Appointment].
   String eventName;

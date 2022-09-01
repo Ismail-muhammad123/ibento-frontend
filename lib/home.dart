@@ -15,7 +15,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool menuExpanded = true;
   int selectedWidget = 0;
-  List<Widget> pages = const [
+  List<Widget> pages = [
     Dashboard(),
     Bookings(),
     NewBooking(),
@@ -71,6 +71,7 @@ class _HomePageState extends State<HomePage> {
                   GestureDetector(
                     onTap: () => setState(() => selectedWidget = 0),
                     child: MenuTile(
+                      current: selectedWidget == 0,
                       title: "Dashboard",
                       icon: Icons.calendar_month,
                       expanded: menuExpanded,
@@ -79,22 +80,37 @@ class _HomePageState extends State<HomePage> {
                   GestureDetector(
                     onTap: () => setState(() => selectedWidget = 1),
                     child: MenuTile(
+                      current: selectedWidget == 1,
                       title: "Bookings",
                       icon: Icons.book_online,
                       expanded: menuExpanded,
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: (() => setState(() => selectedWidget = 2)),
-                    child: MenuTile(
-                      title: "New Booking",
-                      icon: Icons.add,
-                      expanded: menuExpanded,
+                      trailing: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: IconButton(
+                          onPressed: () => showDialog(
+                            context: context,
+                            builder: (context) {
+                              return Dialog(
+                                child: SizedBox(
+                                  width: 500.0,
+                                  child: NewBooking(),
+                                ),
+                              );
+                            },
+                          ),
+                          icon: Icon(
+                            Icons.add,
+                            size: 30,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                   GestureDetector(
                     onTap: () => setState(() => selectedWidget = 3),
                     child: MenuTile(
+                      current: selectedWidget == 3,
                       title: "Calender",
                       icon: Icons.calendar_view_month_rounded,
                       expanded: menuExpanded,

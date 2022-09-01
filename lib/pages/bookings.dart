@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:ibento/pages/new_booking.dart';
 
 class Bookings extends StatelessWidget {
   const Bookings({Key? key}) : super(key: key);
+
+  _getNewBooking(context) {}
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +14,19 @@ class Bookings extends StatelessWidget {
         title: Text("Bookings"),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return Dialog(
+                child: SizedBox(
+                  width: 500.0,
+                  child: NewBooking(),
+                ),
+              );
+            },
+          );
+        },
         child: Icon(Icons.add),
       ),
       body: Container(
@@ -24,35 +39,22 @@ class Bookings extends StatelessWidget {
               child: Row(
                 children: [
                   Expanded(
-                    child: Container(
-                      alignment: Alignment.center,
-                      height: 40,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                        child: SizedBox(
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                            ),
-                          ),
-                        ),
-                      ),
-                      decoration: BoxDecoration(
-                        border: Border.all(),
-                        borderRadius: BorderRadius.circular(10.0),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
                       ),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
+                    padding: const EdgeInsets.only(left: 4.0),
                     child: MaterialButton(
                       onPressed: () {},
                       child: Text("Search"),
                       minWidth: 150,
                       color: Colors.blue,
-                      height: 45,
+                      height: 60,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
+                        borderRadius: BorderRadius.circular(4.0),
                       ),
                     ),
                   )

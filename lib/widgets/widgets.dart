@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class DashboardMetricsCard extends StatelessWidget {
   final int value;
   final String label;
@@ -52,6 +51,8 @@ class MenuTile extends StatelessWidget {
   final String title;
   final IconData icon;
   bool expanded;
+  bool current;
+  Widget? trailing;
   Color color;
   MenuTile({
     Key? key,
@@ -59,13 +60,16 @@ class MenuTile extends StatelessWidget {
     required this.icon,
     this.color = Colors.white,
     this.expanded = true,
+    this.current = false,
+    this.trailing,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Container(
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 400),
         child: Padding(
           padding: const EdgeInsets.only(
             left: 10.0,
@@ -88,6 +92,8 @@ class MenuTile extends StatelessWidget {
                       ),
                     )
                   : Container(),
+              Spacer(),
+              expanded ? trailing ?? Container() : Container(),
             ],
           ),
         ),
@@ -95,11 +101,16 @@ class MenuTile extends StatelessWidget {
         height: 50.0,
         decoration: BoxDecoration(
           border: Border(
-            left: BorderSide(
-              width: 5.0,
-              color: color,
-            ),
-          ),
+              left: BorderSide(
+                width: 5.0,
+                color: color,
+              ),
+              right: current
+                  ? BorderSide(
+                      width: 5.0,
+                      color: color,
+                    )
+                  : BorderSide.none),
         ),
       ),
     );

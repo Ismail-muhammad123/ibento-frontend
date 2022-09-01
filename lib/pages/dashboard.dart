@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../widgets/widgets.dart';
+import 'new_booking.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -17,6 +18,22 @@ class _DashboardState extends State<Dashboard> {
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 0, 42, 75),
         title: const Text("Analytics Dashboard"),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return Dialog(
+                child: SizedBox(
+                  width: 500.0,
+                  child: NewBooking(),
+                ),
+              );
+            },
+          );
+        },
+        child: Icon(Icons.add),
       ),
       body: Container(
         width: double.maxFinite,
