@@ -58,6 +58,14 @@ class _BookingsCalenderState extends State<BookingsCalender> {
 
   CalendarView calenderView = CalendarView.month;
 
+  final CalendarController _calendarController = CalendarController();
+
+  @override
+  initState() {
+    _calendarController.displayDate = DateTime(2022, 02, 05);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,23 +78,27 @@ class _BookingsCalenderState extends State<BookingsCalender> {
         children: [
           Expanded(
             child: SfCalendar(
+              controller: _calendarController,
               onTap: (details) {
                 DateTime date = details.date!;
-                dynamic appointments = details.appointments;
-                CalendarElement view = details.targetElement;
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return Dialog(
-                      child: SizedBox(
-                        width: 500.0,
-                        child: NewBooking(
-                          dateTime: date,
+                if (_calendarController.view != CalendarView.day) {
+                  _calendarController.view = CalendarView.day;
+                  _calendarController.displayDate = date;
+                } else {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return Dialog(
+                        child: SizedBox(
+                          width: 500.0,
+                          child: NewBooking(
+                            dateTime: date,
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                );
+                      );
+                    },
+                  );
+                }
               },
               showNavigationArrow: true,
               showDatePickerButton: true,
@@ -97,7 +109,6 @@ class _BookingsCalenderState extends State<BookingsCalender> {
               allowedViews: const [
                 CalendarView.day,
                 CalendarView.week,
-                CalendarView.workWeek,
                 CalendarView.month,
                 CalendarView.schedule,
               ],
