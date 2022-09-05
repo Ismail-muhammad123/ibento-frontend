@@ -3,6 +3,7 @@ import 'package:ibento/pages/bookings.dart';
 import 'package:ibento/pages/bookings_calender.dart';
 import 'package:ibento/pages/dashboard.dart';
 import 'package:ibento/pages/new_booking.dart';
+import 'package:ibento/pages/profile.dart';
 import './widgets/widgets.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,8 +19,8 @@ class _HomePageState extends State<HomePage> {
   List<Widget> pages = [
     Dashboard(),
     Bookings(),
-    NewBooking(),
     BookingsCalender(),
+    ProfilePage(),
   ];
   @override
   Widget build(BuildContext context) {
@@ -112,24 +113,28 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () => setState(() => selectedWidget = 3),
+                    onTap: () => setState(() => selectedWidget = 2),
                     child: MenuTile(
-                      current: selectedWidget == 3,
+                      current: selectedWidget == 2,
                       title: "Calender",
                       icon: Icons.calendar_view_month_rounded,
                       expanded: menuExpanded,
                     ),
                   ),
-                  MenuTile(
-                    title: "Profile",
-                    icon: Icons.person,
-                    expanded: menuExpanded,
+                  GestureDetector(
+                    onTap: () => setState(() => selectedWidget = 3),
+                    child: MenuTile(
+                      current: selectedWidget == 3,
+                      title: "Profile",
+                      icon: Icons.person,
+                      expanded: menuExpanded,
+                    ),
                   ),
-                  MenuTile(
-                    title: "Settings",
-                    icon: Icons.settings,
-                    expanded: menuExpanded,
-                  ),
+                  // MenuTile(
+                  //   title: "Settings",
+                  //   icon: Icons.settings,
+                  //   expanded: menuExpanded,
+                  // ),
                   const Spacer(),
                   MenuTile(
                     title: "Logout",

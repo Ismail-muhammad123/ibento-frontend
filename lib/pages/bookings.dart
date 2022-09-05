@@ -102,13 +102,15 @@ class Bookings extends StatelessWidget {
                       ),
                       DataColumn(
                         label: Text("Actions"),
-                      )
+                      ),
                     ],
                     rows: List.generate(
                       13,
                       (index) => DataRow(
                         cells: [
-                          DataCell(Text("Wedding cup")),
+                          DataCell(
+                            Text("Wedding cup"),
+                          ),
                           DataCell(Text("Ismail Muhammad")),
                           DataCell(Text("08163351109")),
                           DataCell(Text("31/08/2022")),
@@ -122,6 +124,19 @@ class Bookings extends StatelessWidget {
                                       showDialog(
                                         context: context,
                                         builder: (context) => BookingDetails(),
+                                      );
+                                    },
+                                    child: Text("Open"),
+                                  ),
+                                ),
+                                PopupMenuItem(
+                                  child: MaterialButton(
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => Dialog(
+                                          child: NewBooking(),
+                                        ),
                                       );
                                     },
                                     child: Text("Edit"),
