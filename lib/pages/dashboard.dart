@@ -111,6 +111,7 @@ class _DashboardState extends State<Dashboard> {
               Padding(
                 padding: EdgeInsets.all(8.0),
                 child: SizedBox(
+                  width: double.maxFinite,
                   height: MediaQuery.of(context).size.height - 280.0,
                   child: SingleChildScrollView(
                     child: DataTable(

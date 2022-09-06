@@ -46,6 +46,7 @@ class EventDataSource extends CalendarDataSource {
 
 /// Custom business object class which contains properties to hold the detailed
 /// information about the event data which will be rendered in calendar.
+
 class Event {
   /// Creates a meeting class with required details.
   Event({
@@ -54,22 +55,43 @@ class Event {
     required this.to,
     required this.background,
     required this.isAllDay,
-    required this.createdAt,
-    required this.assignedVenue,
-    required this.ammendments,
     required this.name,
-    required this.email,
-    required this.phoneNumber,
-    required this.address,
-    required this.paymentMethod,
-    required this.amountPayed,
-    required this.balance,
-    required this.status,
-    required this.refunded,
-    required this.amountRefunded,
-    required this.checkInTime,
-    required this.checkoutTime,
+    required this.phone,
+    this.email = "",
+    this.address = "",
+    this.amountPaid = 0,
+    this.balance = 0,
   });
+
+  factory Event.fromMap(Map<String, dynamic> eventMap) {
+    return Event(
+      background: Colors.blue,
+      from: DateTime.fromMillisecondsSinceEpoch(eventMap["startTime"]),
+      to: DateTime.fromMillisecondsSinceEpoch(eventMap["endTime"]),
+      eventName: eventMap["eventName"],
+      isAllDay: false,
+      name: eventMap["name"],
+      phone: eventMap["phone"],
+      email: eventMap["email"],
+      address: eventMap["address"],
+      amountPaid: eventMap["amountPaid"],
+      balance: eventMap["balance"],
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      "eventName": eventName,
+      "startTime": from.millisecondsSinceEpoch,
+      "endTime": to.millisecondsSinceEpoch,
+      "name": name,
+      "phone": phone,
+      "email": email,
+      "address": address,
+      "amountPaid": amountPaid,
+      "balance": balance,
+    };
+  }
 
   /// Event name which is equivalent to subject property of [Appointment].
   String eventName;
@@ -86,58 +108,7 @@ class Event {
   /// IsAllDay which is equivalent to isAllDay property of [Appointment].
   bool isAllDay;
 
-  // Date at which the records was created
-  DateTime createdAt;
+  String name, phone, email, address;
 
-  // Venue assigned for this booking
-  Venue assignedVenue;
-
-  // number of times the booking was updated
-  int ammendments;
-
-  // Name of the person making the booking
-  String name;
-
-  // Email of the person making the booking
-  String email;
-
-  // telephone number of the person making the booking
-  String phoneNumber;
-
-  // Address of the person making the booking
-  String address;
-
-  // method of payment
-  String paymentMethod;
-
-  // amount payed
-  double amountPayed;
-
-  // balance left for payment
-  double balance;
-
-  // weather the booking is attended, canceled or missed
-  int status;
-
-  // weather the booking paymen ir refunded
-  bool refunded;
-
-  // amount refunded if refunded
-  double amountRefunded;
-
-  // checkin time
-  DateTime checkInTime;
-
-  // checkout Time
-  DateTime checkoutTime;
-}
-
-class Venue {
-  String name;
-  bool isAvailable;
-
-  Venue({
-    required this.name,
-    this.isAvailable = true,
-  });
+  int amountPaid, balance;
 }
