@@ -20,7 +20,7 @@ class _BookingsCalenderState extends State<BookingsCalender> {
 
   @override
   initState() {
-    _calendarController.displayDate = DateTime(2022, 02, 05);
+    _calendarController.displayDate = DateTime.now();
     super.initState();
   }
 
@@ -84,6 +84,7 @@ class _BookingsCalenderState extends State<BookingsCalender> {
               children: [
                 Expanded(
                   child: SfCalendar(
+                    
                     controller: _calendarController,
                     onTap: (details) {
                       DateTime date = details.date!;

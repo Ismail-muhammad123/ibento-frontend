@@ -53,6 +53,7 @@ class Event {
     required this.eventName,
     required this.from,
     required this.to,
+    required this.createdAt,
     required this.background,
     required this.isAllDay,
     required this.name,
@@ -68,6 +69,7 @@ class Event {
       background: Colors.blue,
       from: DateTime.fromMillisecondsSinceEpoch(eventMap["startTime"]),
       to: DateTime.fromMillisecondsSinceEpoch(eventMap["endTime"]),
+      createdAt: DateTime.fromMillisecondsSinceEpoch(eventMap["createdAt"]),
       eventName: eventMap["eventName"],
       isAllDay: false,
       name: eventMap["name"],
@@ -84,6 +86,7 @@ class Event {
       "eventName": eventName,
       "startTime": from.millisecondsSinceEpoch,
       "endTime": to.millisecondsSinceEpoch,
+      "createdAt": createdAt.millisecondsSinceEpoch,
       "name": name,
       "phone": phone,
       "email": email,
@@ -101,6 +104,8 @@ class Event {
 
   /// To which is equivalent to end time property of [Appointment].
   DateTime to;
+
+  DateTime createdAt;
 
   /// Background which is equivalent to color property of [Appointment].
   Color background;

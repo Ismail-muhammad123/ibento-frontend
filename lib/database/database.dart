@@ -15,7 +15,7 @@ class DatabaseClass {
     var databaseFactory = databaseFactoryFfi;
     // in memory data base for testing
     Directory? appDocDir = await getApplicationSupportDirectory();
-    String path = join(appDocDir.path, 'Local_bookings_record.db');
+    String path = join(appDocDir.path, 'Desktop_Booking_Record_Storage.db');
     var db = await databaseFactory.openDatabase(path);
 
     await db.execute('''
@@ -24,6 +24,7 @@ class DatabaseClass {
         eventName TEXT,
         startTime INT,
         endTime INT,
+        createdAt INT,
         name TEXT,
         phone TEXT,
         email TEXT NULL,
@@ -45,15 +46,13 @@ class DatabaseClass {
     int to = event_map['endTime'];
 
     List<Map> r = await db.rawQuery(
-        "SELECT eventName FROM $dbName WHERE $from >= startTime OR $to <= endTime");
+        "SELECT eventName FROM $dbName WHERE  (startTime BETWEEN $from AND $to) OR (endTime BETWEEN $from AND $to) OR ($from BETWEEN startTime AND endTime) OR ($to BETWEEN startTime AND endTime)");
 
     if (r.length > 0) {
       return 0;
     }
 
     var id = await db.insert(dbName, event.toMap());
-
-    print(id);
 
     db.close();
 
@@ -64,8 +63,6 @@ class DatabaseClass {
     var db = await initiateDB();
 
     List<Map<String, dynamic>> result = await db.query(dbName);
-
-    print(result);
 
     db.close();
 

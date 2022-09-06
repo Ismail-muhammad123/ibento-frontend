@@ -1,11 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:ibento/data/data.dart';
 import 'package:ibento/pages/details.dart';
 import 'package:ibento/pages/new_booking.dart';
+import 'package:ibento/providers/bookings_provider.dart';
+import 'package:ibento/widgets/widgets.dart';
+import 'package:provider/provider.dart';
 
-class Bookings extends StatelessWidget {
-  const Bookings({Key? key}) : super(key: key);
+class Bookings extends StatefulWidget {
+  Bookings({Key? key}) : super(key: key);
+
+  @override
+  State<Bookings> createState() => _BookingsState();
+}
+
+class _BookingsState extends State<Bookings> {
+  final TextEditingController _searchController = TextEditingController();
 
   _getNewBooking(context) {}
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +58,7 @@ class Bookings extends StatelessWidget {
                 children: [
                   Expanded(
                     child: TextFormField(
+                      controller: _searchController,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                       ),
@@ -77,134 +95,40 @@ class Bookings extends StatelessWidget {
               child: SizedBox(
                 height: MediaQuery.of(context).size.height - 280.0,
                 child: SingleChildScrollView(
-                  child: DataTable(
-                    showBottomBorder: true,
-                    headingTextStyle: const TextStyle(
-                      color: Color.fromARGB(255, 1, 30, 54),
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                    ),
-                    columns: [
-                      DataColumn(
-                        label: Text("Title"),
-                      ),
-                      DataColumn(
-                        label: Text("Name"),
-                      ),
-                      DataColumn(
-                        label: Text("Phone Number"),
-                      ),
-                      DataColumn(
-                        label: Text("Date Registered"),
-                      ),
-                      DataColumn(
-                        label: Text("Date Scheduled"),
-                      ),
-                      DataColumn(
-                        label: Text("Actions"),
-                      ),
-                    ],
-                    rows: List.generate(
-                      13,
-                      (index) => DataRow(
-                        cells: [
-                          DataCell(
-                            Text("Wedding cup"),
-                          ),
-                          DataCell(Text("Ismail Muhammad")),
-                          DataCell(Text("08163351109")),
-                          DataCell(Text("31/08/2022")),
-                          DataCell(Text("20/09/2022")),
-                          DataCell(
-                            PopupMenuButton(
-                              itemBuilder: (context) => [
-                                PopupMenuItem(
-                                  child: MaterialButton(
-                                    onPressed: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) => BookingDetails(),
-                                      );
-                                    },
-                                    child: Text("Open"),
-                                  ),
-                                ),
-                                PopupMenuItem(
-                                  child: MaterialButton(
-                                    onPressed: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) => Dialog(
-                                          child: NewBooking(),
-                                        ),
-                                      );
-                                    },
-                                    child: Text("Edit"),
-                                  ),
-                                ),
-                                PopupMenuItem(
-                                  child: MaterialButton(
-                                    onPressed: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) => AlertDialog(
-                                          content: Text(
-                                              "Are your sure You want to check in this booking?"),
-                                          actions: [
-                                            MaterialButton(
-                                              color: Colors.blueGrey,
-                                              child: Text("No"),
-                                              onPressed: () =>
-                                                  Navigator.of(context).pop(),
-                                            ),
-                                            MaterialButton(
-                                              color: Colors.blue,
-                                              child: Text("Yes"),
-                                              onPressed: () =>
-                                                  Navigator.of(context).pop(),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                    child: Text("Check IN"),
-                                  ),
-                                ),
-                                PopupMenuItem(
-                                  child: MaterialButton(
-                                    onPressed: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) => AlertDialog(
-                                          content: Text(
-                                              "Are your sure You want to cancel this booking?"),
-                                          actions: [
-                                            MaterialButton(
-                                              color: Colors.blueGrey,
-                                              child: Text("No"),
-                                              onPressed: () =>
-                                                  Navigator.of(context).pop(),
-                                            ),
-                                            MaterialButton(
-                                              color: Colors.blue,
-                                              child: Text("Yes"),
-                                              onPressed: () =>
-                                                  Navigator.of(context).pop(),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                    child: Text("Cancel"),
-                                  ),
-                                ),
-                              ],
+                  child: FutureBuilder<List<Event>>(
+                      future: context.watch<BookingsProvider>().getAllEvents(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(20.0),
+                              child: CircularProgressIndicator(),
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                          );
+                        }
+
+                        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                          return Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(20.0),
+                              child: Text(
+                                  "You have no Bookings yet. Click on the floating button below to create new booking"),
+                            ),
+                          );
+                        }
+                        List<Event> data = snapshot.data!.where((e) {
+                          if ((e.eventName == _searchController.text) ||
+                              (e.name == _searchController.text) ||
+                              (e.phone == _searchController.text)) {
+                            return true;
+                          }
+                          return false;
+                        }).toList();
+                        return BookingsListTable(
+                          events: data,
+                        );
+                      }),
                 ),
               ),
             )

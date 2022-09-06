@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ibento/data/data.dart';
-import 'package:ibento/data/sample_data.dart';
 import 'package:ibento/providers/bookings_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -20,12 +19,6 @@ class NewBooking extends StatefulWidget {
 
 class _NewBookingState extends State<NewBooking> {
   DateTime selectedDate = DateTime.now();
-  TimeOfDay startTime = TimeOfDay.now();
-  TimeOfDay finishTime = TimeOfDay(hour: 23, minute: 59);
-  DateTime dateTime = DateTime.now();
-  bool showDate = false;
-  bool showTime = false;
-  bool showDateTime = false;
 
   bool repeat = false;
   String repeatPattern = "d";
@@ -64,11 +57,15 @@ class _NewBookingState extends State<NewBooking> {
 
   // Select for Time
   Future<TimeOfDay> _selectStartTime(BuildContext context) async {
+    TimeOfDay startTime = widget.dateTime != null
+        ? TimeOfDay(
+            hour: widget.dateTime!.hour, minute: widget.dateTime!.minute)
+        : TimeOfDay.now();
     final selected = await showTimePicker(
       context: context,
       initialTime: startTime,
     );
-    if (selected != null && selected != startTime) {
+    if (selected != null) {
       setState(() {
         startTime = selected;
       });
@@ -77,6 +74,12 @@ class _NewBookingState extends State<NewBooking> {
   }
 
   Future<TimeOfDay> _selectFinishTime(BuildContext context) async {
+    TimeOfDay startTime = widget.dateTime != null
+        ? TimeOfDay(
+            hour: widget.dateTime!.hour, minute: widget.dateTime!.minute)
+        : TimeOfDay.now();
+    TimeOfDay finishTime =
+        TimeOfDay(hour: startTime.hour + 1, minute: startTime.minute);
     final selected = await showTimePicker(
       context: context,
       initialTime: finishTime,
@@ -99,15 +102,6 @@ class _NewBookingState extends State<NewBooking> {
     }
   }
 
-  String getDateTime() {
-    // ignore: unnecessary_null_comparison
-    if (dateTime == null) {
-      return 'select date timer';
-    } else {
-      return DateFormat('yyyy-MM-dd HH: ss a').format(dateTime);
-    }
-  }
-
   String getTime(TimeOfDay tod) {
     final now = DateTime.now();
 
@@ -118,11 +112,22 @@ class _NewBookingState extends State<NewBooking> {
 
   Event _getNewEvent() {
     DateTime eventDate = selectedDate;
-    DateTime eventstartDate = DateTime(eventDate.year, eventDate.month,
-        eventDate.day, eventStartTime.hour, eventStartTime.minute);
-    DateTime eventfinishDate = DateTime(eventDate.year, eventDate.month,
-        eventDate.day, eventFinishTime.hour, eventFinishTime.minute);
+    DateTime eventstartDate = DateTime(
+      eventDate.year,
+      eventDate.month,
+      eventDate.day,
+      eventStartTime.hour,
+      eventStartTime.minute,
+    );
+    DateTime eventfinishDate = DateTime(
+      eventDate.year,
+      eventDate.month,
+      eventDate.day,
+      eventFinishTime.hour,
+      eventFinishTime.minute,
+    );
     Event event = Event(
+      createdAt: DateTime.now(),
       name: _nameController.text,
       phone: _phoneNumberController.text,
       address: _phoneNumberController.text,
@@ -143,6 +148,12 @@ class _NewBookingState extends State<NewBooking> {
 
   @override
   void initState() {
+    eventStartTime = widget.dateTime != null
+        ? TimeOfDay(
+            hour: widget.dateTime!.hour, minute: widget.dateTime!.minute)
+        : TimeOfDay.now();
+    eventFinishTime =
+        TimeOfDay(hour: eventStartTime.hour + 1, minute: eventStartTime.minute);
     _dateController.text =
         DateFormat('MMM d, yyyy').format(widget.dateTime ?? selectedDate);
     _startTimeController.text =
@@ -311,7 +322,7 @@ class _NewBookingState extends State<NewBooking> {
                           padding: const EdgeInsets.all(8.0),
                           child: TextFormField(
                             controller: _finishTimeController,
-                            onTap: () => _selectStartTime(context).then(
+                            onTap: () => _selectFinishTime(context).then(
                               (value) => setState(
                                 () {
                                   eventFinishTime = value;

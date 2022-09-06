@@ -24,6 +24,7 @@ class BookingsProvider extends ChangeNotifier {
         switch (repeatPattern.toLowerCase()) {
           case "d":
             Event ev = Event(
+              createdAt: event.createdAt,
               name: event.name,
               phone: event.phone,
               address: event.phone,
@@ -56,6 +57,7 @@ class BookingsProvider extends ChangeNotifier {
             break;
           case "w":
             Event ev = Event(
+              createdAt: event.createdAt,
               name: event.name,
               phone: event.phone,
               address: event.phone,
@@ -88,6 +90,7 @@ class BookingsProvider extends ChangeNotifier {
             break;
           case "m":
             Event ev = Event(
+              createdAt: event.createdAt,
               name: event.name,
               phone: event.phone,
               address: event.phone,

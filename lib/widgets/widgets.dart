@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:ibento/data/data.dart';
+import 'package:intl/intl.dart';
+
+import '../pages/details.dart';
+import '../pages/new_booking.dart';
 
 class DashboardMetricsCard extends StatelessWidget {
   final int value;
@@ -113,6 +118,149 @@ class MenuTile extends StatelessWidget {
                   : BorderSide.none),
         ),
       ),
+    );
+  }
+}
+
+class BookingsListTable extends StatelessWidget {
+  BookingsListTable({
+    Key? key,
+    required this.events,
+  }) : super(key: key);
+
+  List<Event> events;
+
+  @override
+  Widget build(BuildContext context) {
+    return DataTable(
+      showBottomBorder: true,
+      headingTextStyle: const TextStyle(
+        color: Color.fromARGB(255, 1, 30, 54),
+        fontSize: 20,
+        fontWeight: FontWeight.w700,
+      ),
+      columns: [
+        DataColumn(
+          label: Text("Booking Title"),
+        ),
+        DataColumn(
+          label: Text("Name"),
+        ),
+        DataColumn(
+          label: Text("Phone Number"),
+        ),
+        DataColumn(
+          label: Text("Date Created"),
+        ),
+        DataColumn(
+          label: Text("Event Date"),
+        ),
+        DataColumn(
+          label: Text("Actions"),
+        ),
+      ],
+      rows: events
+          .map(
+            (event) => DataRow(
+              cells: [
+                DataCell(
+                  Text(event.eventName),
+                ),
+                DataCell(Text(event.name)),
+                DataCell(Text(event.phone)),
+                DataCell(Text(
+                    DateFormat('EEE, d MMM, yyyy').format(event.createdAt))),
+                DataCell(Text(DateFormat('MMM d, yyyy').format(event.from))),
+                DataCell(
+                  PopupMenuButton(
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                        child: MaterialButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => BookingDetails(),
+                            );
+                          },
+                          child: Text("Open"),
+                        ),
+                      ),
+                      PopupMenuItem(
+                        child: MaterialButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => Dialog(
+                                child: NewBooking(),
+                              ),
+                            );
+                          },
+                          child: Text("Edit"),
+                        ),
+                      ),
+                      PopupMenuItem(
+                        child: MaterialButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                content: Text(
+                                    "Are your sure You want to check in this booking?"),
+                                actions: [
+                                  MaterialButton(
+                                    color: Colors.blueGrey,
+                                    child: Text("No"),
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(),
+                                  ),
+                                  MaterialButton(
+                                    color: Colors.blue,
+                                    child: Text("Yes"),
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                          child: Text("Check IN"),
+                        ),
+                      ),
+                      PopupMenuItem(
+                        child: MaterialButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                content: Text(
+                                    "Are your sure You want to cancel this booking?"),
+                                actions: [
+                                  MaterialButton(
+                                    color: Colors.blueGrey,
+                                    child: Text("No"),
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(),
+                                  ),
+                                  MaterialButton(
+                                    color: Colors.blue,
+                                    child: Text("Yes"),
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                          child: Text("Cancel"),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          )
+          .toList(),
     );
   }
 }
