@@ -25,7 +25,21 @@ class EventDataSource extends CalendarDataSource {
 
   @override
   Color getColor(int index) {
-    return _getMeetingData(index).background;
+    Event e = _getMeetingData(index);
+
+    if (e.canceled) {
+      return Colors.red;
+    } else if (e.attended == false &&
+        e.canceled == false &&
+        e.to.isBefore(
+          DateTime.now(),
+        )) {
+      return Colors.orange;
+    } else if (e.attended) {
+      return Colors.green;
+    } else {
+      return Colors.blue;
+    }
   }
 
   @override
@@ -59,6 +73,8 @@ class Event {
     required this.isAllDay,
     required this.name,
     required this.phone,
+    this.attended = false,
+    this.canceled = false,
     this.email = "",
     this.address = "",
     this.amountPaid = 0,
@@ -80,6 +96,8 @@ class Event {
       address: eventMap["address"],
       amountPaid: eventMap["amountPaid"],
       balance: eventMap["balance"],
+      attended: eventMap['attended'] == 0 ? false : true,
+      canceled: eventMap['attended'] == 0 ? false : true,
     );
   }
 
@@ -95,6 +113,8 @@ class Event {
       "address": address,
       "amountPaid": amountPaid,
       "balance": balance,
+      "attended": attended ? 1 : 0,
+      "canceled": canceled ? 1 : 0,
     };
 
     if (id != null) {
@@ -122,6 +142,8 @@ class Event {
 
   /// IsAllDay which is equivalent to isAllDay property of [Appointment].
   bool isAllDay;
+  bool attended;
+  bool canceled;
 
   String name, phone, email, address;
 

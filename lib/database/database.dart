@@ -15,7 +15,7 @@ class DatabaseClass {
     var databaseFactory = databaseFactoryFfi;
     // in memory data base for testing
     Directory? appDocDir = await getApplicationSupportDirectory();
-    String path = join(appDocDir.path, 'LOCAL_DATABASE.db');
+    String path = join(appDocDir.path, 'IBENTO_LOCAL_DATABASE.db');
     var db = await databaseFactory.openDatabase(path);
 
     await db.execute('''
@@ -30,7 +30,9 @@ class DatabaseClass {
         email TEXT NULL,
         address TEXT NULL,
         amountPaid INT,
-        balance INT
+        balance INT,
+        attended INT,
+        canceled INT
     )
     ''');
 

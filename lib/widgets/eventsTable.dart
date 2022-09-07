@@ -61,7 +61,7 @@ class BookingsListTable extends StatelessWidget {
                 ),
                 DataCell(
                   Text(
-                    DateFormat('d/M/yyyy. HH:mm a').format(event.from),
+                    DateFormat('d/M/yyyy. HH:mm a').format(event.to),
                   ),
                 ),
                 DataCell(

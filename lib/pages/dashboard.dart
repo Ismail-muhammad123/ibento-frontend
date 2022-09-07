@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ibento/data/data.dart';
 import 'package:ibento/providers/bookings_provider.dart';
 import 'package:provider/provider.dart';
-import '../dashboardMetricsCard.dart';
+import '../widgets/dashboardMetricsCard.dart';
 import '../widgets/eventsTable.dart';
 import 'new_booking.dart';
 
@@ -92,20 +92,31 @@ class _DashboardState extends State<Dashboard> {
                       ),
                       Expanded(
                         child: DashboardMetricsCard(
-                          label: "Attended Bookings",
-                          value: 0,
-                        ),
+                            label: "Attended Bookings",
+                            value: data
+                                .where((element) => element.attended)
+                                .length),
                       ),
                       Expanded(
                         child: DashboardMetricsCard(
                           label: "Cancelations",
-                          value: 0,
+                          value:
+                              data.where((element) => element.canceled).length,
                         ),
                       ),
                       Expanded(
                         child: DashboardMetricsCard(
                           label: "Missed Bookings",
-                          value: 0,
+                          value: data
+                              .where(
+                                (element) =>
+                                    element.attended == false &&
+                                    !element.canceled == false &&
+                                    element.to.isBefore(
+                                      DateTime.now(),
+                                    ),
+                              )
+                              .length,
                         ),
                       ),
                     ],

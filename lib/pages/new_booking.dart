@@ -134,6 +134,8 @@ class _NewBookingState extends State<NewBooking> {
     );
     Event event = Event(
       _updating ? widget.event!.id : null,
+      attended: _updating ? widget.event!.attended : false,
+      canceled: _updating ? widget.event!.canceled : false,
       createdAt: _updating ? widget.event!.createdAt : DateTime.now(),
       name: _nameController.text,
       phone: _phoneNumberController.text,

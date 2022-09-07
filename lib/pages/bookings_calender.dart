@@ -4,6 +4,8 @@ import 'package:ibento/providers/bookings_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
+import '../widgets/calender_event_status_label.dart';
+import '../widgets/calender_labels.dart';
 import 'new_booking.dart';
 
 class BookingsCalender extends StatefulWidget {
@@ -69,63 +71,69 @@ class _BookingsCalenderState extends State<BookingsCalender> {
           Padding(padding: EdgeInsets.symmetric(horizontal: 20.0)),
         ],
       ),
-      body: FutureBuilder<List<Event>>(
-          future: context.watch<BookingsProvider>().getAllEvents(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
+      body: Column(
+        children: [
+          const CalenderLabels(),
+          Expanded(
+            child: FutureBuilder<List<Event>>(
+                future: context.watch<BookingsProvider>().getAllEvents(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
 
-            List<Event> events = snapshot.data ?? [];
+                  List<Event> events = snapshot.data ?? [];
 
-            return Column(
-              children: [
-                Expanded(
-                  child: SfCalendar(
-                    
-                    controller: _calendarController,
-                    onTap: (details) {
-                      DateTime date = details.date!;
-                      if (_calendarController.view != CalendarView.day) {
-                        _calendarController.view = CalendarView.day;
-                        _calendarController.displayDate = date;
-                      } else {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return Dialog(
-                              child: SizedBox(
-                                width: 500.0,
-                                child: NewBooking(
-                                  dateTime: date,
-                                ),
-                              ),
-                            );
+                  return Column(
+                    children: [
+                      Expanded(
+                        child: SfCalendar(
+                          controller: _calendarController,
+                          onTap: (details) {
+                            DateTime date = details.date!;
+                            if (_calendarController.view != CalendarView.day) {
+                              _calendarController.view = CalendarView.day;
+                              _calendarController.displayDate = date;
+                            } else {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return Dialog(
+                                    child: SizedBox(
+                                      width: 500.0,
+                                      child: NewBooking(
+                                        dateTime: date,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            }
                           },
-                        );
-                      }
-                    },
-                    showNavigationArrow: true,
-                    showDatePickerButton: true,
-                    monthViewSettings: const MonthViewSettings(
-                      appointmentDisplayMode:
-                          MonthAppointmentDisplayMode.appointment,
-                    ),
-                    view: CalendarView.week,
-                    allowedViews: const [
-                      CalendarView.day,
-                      CalendarView.week,
-                      CalendarView.month,
-                      CalendarView.schedule,
+                          showNavigationArrow: true,
+                          showDatePickerButton: true,
+                          monthViewSettings: const MonthViewSettings(
+                            appointmentDisplayMode:
+                                MonthAppointmentDisplayMode.appointment,
+                          ),
+                          view: CalendarView.week,
+                          allowedViews: const [
+                            CalendarView.day,
+                            CalendarView.week,
+                            CalendarView.month,
+                            CalendarView.schedule,
+                          ],
+                          dataSource: EventDataSource(events),
+                        ),
+                      ),
                     ],
-                    dataSource: EventDataSource(events),
-                  ),
-                ),
-              ],
-            );
-          }),
+                  );
+                }),
+          ),
+        ],
+      ),
     );
   }
 }
