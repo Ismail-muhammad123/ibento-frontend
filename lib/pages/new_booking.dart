@@ -9,9 +9,11 @@ class NewBooking extends StatefulWidget {
   NewBooking({
     Key? key,
     this.dateTime,
+    this.event,
   }) : super(key: key);
 
   DateTime? dateTime;
+  Event? event;
 
   @override
   State<NewBooking> createState() => _NewBookingState();
@@ -26,7 +28,11 @@ class _NewBookingState extends State<NewBooking> {
   TimeOfDay eventFinishTime = TimeOfDay.now();
   int status = 0;
 
+  bool _updating = false;
+
   bool _loading = false;
+
+  bool _saved = false;
 
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _startTimeController = TextEditingController();
@@ -127,7 +133,8 @@ class _NewBookingState extends State<NewBooking> {
       eventFinishTime.minute,
     );
     Event event = Event(
-      createdAt: DateTime.now(),
+      _updating ? widget.event!.id : null,
+      createdAt: _updating ? widget.event!.createdAt : DateTime.now(),
       name: _nameController.text,
       phone: _phoneNumberController.text,
       address: _phoneNumberController.text,
@@ -141,23 +148,49 @@ class _NewBookingState extends State<NewBooking> {
       eventName: _eventNameController.text,
       from: eventstartDate,
       to: eventfinishDate,
-      isAllDay: false,
+      isAllDay: _updating ? widget.event!.isAllDay : false,
     );
     return event;
   }
 
   @override
   void initState() {
-    eventStartTime = widget.dateTime != null
-        ? TimeOfDay(
-            hour: widget.dateTime!.hour, minute: widget.dateTime!.minute)
-        : TimeOfDay.now();
-    eventFinishTime =
-        TimeOfDay(hour: eventStartTime.hour + 1, minute: eventStartTime.minute);
-    _dateController.text =
-        DateFormat('MMM d, yyyy').format(widget.dateTime ?? selectedDate);
-    _startTimeController.text =
-        DateFormat.jm().format(widget.dateTime ?? selectedDate);
+    if (widget.event != null) {
+      // set the mode to updating
+      _updating = true;
+
+      // populate the form fields with the value
+      _dateController.text =
+          DateFormat('MMM d, yyyy').format(widget.event!.from);
+      _startTimeController.text = DateFormat.jm().format(widget.event!.from);
+      _finishTimeController.text = DateFormat.jm().format(widget.event!.from);
+      _eventNameController.text = widget.event!.eventName;
+      _nameController.text = widget.event!.name;
+      _phoneNumberController.text = widget.event!.phone;
+      _emailController.text = widget.event!.email;
+      _addressController.text = widget.event!.address;
+      _amountPaidController.text = widget.event!.amountPaid.toString();
+      _balanceController.text = widget.event!.balance.toString();
+
+      // set the variables with the data from the event
+      selectedDate = widget.event!.from;
+      eventStartTime = TimeOfDay(
+          hour: widget.event!.from.hour, minute: widget.event!.from.minute);
+      eventFinishTime = TimeOfDay(
+          hour: widget.event!.from.hour + 1, minute: widget.event!.from.minute);
+    } else {
+      eventStartTime = widget.dateTime != null
+          ? TimeOfDay(
+              hour: widget.dateTime!.hour, minute: widget.dateTime!.minute)
+          : TimeOfDay.now();
+      eventFinishTime = TimeOfDay(
+          hour: eventStartTime.hour + 1, minute: eventStartTime.minute);
+      _dateController.text =
+          DateFormat('MMM d, yyyy').format(widget.dateTime ?? selectedDate);
+      selectedDate = widget.dateTime ?? selectedDate;
+      _startTimeController.text =
+          DateFormat.jm().format(widget.dateTime ?? selectedDate);
+    }
     super.initState();
   }
 
@@ -345,9 +378,11 @@ class _NewBookingState extends State<NewBooking> {
                         padding: const EdgeInsets.all(8.0),
                         child: Checkbox(
                           value: repeat,
-                          onChanged: (val) => setState(
-                            () => repeat = val as bool,
-                          ),
+                          onChanged: _updating
+                              ? null
+                              : (val) => setState(
+                                    () => repeat = val as bool,
+                                  ),
                         ),
                       ),
                       Expanded(
@@ -431,80 +466,162 @@ class _NewBookingState extends State<NewBooking> {
                   ),
                   Spacer(),
                   MaterialButton(
-                    onPressed: () async {
-                      if (_eventNameController.text.isEmpty) {
-                        await showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            content: Text("Event Name Field must not be empty"),
-                            actions: [
-                              MaterialButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text("okay".toUpperCase()),
-                              ),
-                            ],
-                          ),
-                        );
-                        return;
-                      }
+                    onPressed: _saved
+                        ? null
+                        : _updating
+                            ? () async {
+                                // update event
+                                if (_eventNameController.text.isEmpty) {
+                                  await showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      content: Text(
+                                          "Event Name Field must not be empty"),
+                                      actions: [
+                                        MaterialButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text("okay".toUpperCase()),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                  return;
+                                }
 
-                      setState(() {
-                        _loading = true;
-                      });
-                      List<String> errors =
-                          await context.read<BookingsProvider>().addEvent(
-                                _getNewEvent(),
-                                repeat: repeat,
-                                repeatations: _repeatationsController
-                                        .text.isNotEmpty
-                                    ? int.parse(_repeatationsController.text)
-                                    : 0,
-                                repeatPattern: repeatPattern,
-                              );
-                      if (errors.length > 0) {
-                        await showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: Row(
-                              children: [
-                                Icon(
-                                  Icons.error,
-                                  color: Colors.red,
-                                ),
-                                Text(
-                                  "Error",
-                                  style: TextStyle(
-                                    fontSize: 18.0,
-                                    color: Colors.red,
-                                  ),
-                                )
-                              ],
-                            ),
-                            actions: [
-                              MaterialButton(
-                                onPressed: () => Navigator.of(context).pop(),
-                                child: Text("OKAY"),
-                                color: Colors.blue,
-                              )
-                            ],
-                            content: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: errors.map((e) => Text(e)).toList(),
-                            ),
-                          ),
-                        );
-                      }
-                      setState(() {
-                        _loading = false;
-                      });
-                      Navigator.of(context).pop();
-                    },
+                                setState(() {
+                                  _loading = true;
+                                });
+                                List<String> errors = await context
+                                    .read<BookingsProvider>()
+                                    .updateEvent(
+                                      _getNewEvent(),
+                                    );
+                                if (errors.length > 0) {
+                                  await showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      title: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.error,
+                                            color: Colors.red,
+                                          ),
+                                          Text(
+                                            "Error",
+                                            style: TextStyle(
+                                              fontSize: 18.0,
+                                              color: Colors.red,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      actions: [
+                                        MaterialButton(
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(),
+                                          child: Text("OKAY"),
+                                          color: Colors.blue,
+                                        )
+                                      ],
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children:
+                                            errors.map((e) => Text(e)).toList(),
+                                      ),
+                                    ),
+                                  );
+                                }
+                                setState(() {
+                                  _loading = false;
+                                  _saved = true;
+                                });
+                              }
+                            : () async {
+                                // save new event
+                                if (_eventNameController.text.isEmpty) {
+                                  await showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      content: Text(
+                                          "Event Name Field must not be empty"),
+                                      actions: [
+                                        MaterialButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text("okay".toUpperCase()),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                  return;
+                                }
+
+                                setState(() {
+                                  _loading = true;
+                                });
+                                List<String> errors = await context
+                                    .read<BookingsProvider>()
+                                    .addEvent(
+                                      _getNewEvent(),
+                                      repeat: repeat,
+                                      repeatations: _repeatationsController
+                                              .text.isNotEmpty
+                                          ? int.parse(
+                                              _repeatationsController.text)
+                                          : 0,
+                                      repeatPattern: repeatPattern,
+                                    );
+                                if (errors.length > 0) {
+                                  await showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      title: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.error,
+                                            color: Colors.red,
+                                          ),
+                                          Text(
+                                            "Error",
+                                            style: TextStyle(
+                                              fontSize: 18.0,
+                                              color: Colors.red,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      actions: [
+                                        MaterialButton(
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(),
+                                          child: Text("OKAY"),
+                                          color: Colors.blue,
+                                        )
+                                      ],
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children:
+                                            errors.map((e) => Text(e)).toList(),
+                                      ),
+                                    ),
+                                  );
+                                }
+                                setState(() {
+                                  _loading = false;
+                                  _saved = true;
+                                });
+                              },
                     height: 50,
                     minWidth: 250,
-                    child: Text("Save"),
                     color: Colors.blue,
+                    child: Text(_saved
+                        ? "Finished"
+                        : _updating
+                            ? "Update"
+                            : "Save"),
                   )
                 ],
               ),

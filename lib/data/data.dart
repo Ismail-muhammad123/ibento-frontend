@@ -48,8 +48,9 @@ class EventDataSource extends CalendarDataSource {
 /// information about the event data which will be rendered in calendar.
 
 class Event {
-  /// Creates a meeting class with required details.
-  Event({
+  /// Creates an Event Booking class with required details.
+  Event(
+    this.id, {
     required this.eventName,
     required this.from,
     required this.to,
@@ -66,6 +67,7 @@ class Event {
 
   factory Event.fromMap(Map<String, dynamic> eventMap) {
     return Event(
+      eventMap['id'],
       background: Colors.blue,
       from: DateTime.fromMillisecondsSinceEpoch(eventMap["startTime"]),
       to: DateTime.fromMillisecondsSinceEpoch(eventMap["endTime"]),
@@ -82,7 +84,7 @@ class Event {
   }
 
   Map<String, dynamic> toMap() {
-    return {
+    Map<String, dynamic> data = {
       "eventName": eventName,
       "startTime": from.millisecondsSinceEpoch,
       "endTime": to.millisecondsSinceEpoch,
@@ -94,7 +96,15 @@ class Event {
       "amountPaid": amountPaid,
       "balance": balance,
     };
+
+    if (id != null) {
+      data['id'] = id;
+    }
+
+    return data;
   }
+
+  int? id;
 
   /// Event name which is equivalent to subject property of [Appointment].
   String eventName;

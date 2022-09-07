@@ -3,8 +3,9 @@ import 'package:ibento/data/data.dart';
 import 'package:ibento/pages/details.dart';
 import 'package:ibento/pages/new_booking.dart';
 import 'package:ibento/providers/bookings_provider.dart';
-import 'package:ibento/widgets/widgets.dart';
 import 'package:provider/provider.dart';
+
+import '../widgets/eventsTable.dart';
 
 class Bookings extends StatefulWidget {
   Bookings({Key? key}) : super(key: key);
@@ -15,8 +16,6 @@ class Bookings extends StatefulWidget {
 
 class _BookingsState extends State<Bookings> {
   final TextEditingController _searchController = TextEditingController();
-
-  _getNewBooking(context) {}
 
   @override
   void dispose() {
@@ -60,6 +59,8 @@ class _BookingsState extends State<Bookings> {
                     child: TextFormField(
                       controller: _searchController,
                       decoration: InputDecoration(
+                        hintText: "Name, title or phone number",
+                        label: Text("Search"),
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -83,7 +84,7 @@ class _BookingsState extends State<Bookings> {
             Padding(padding: EdgeInsets.all(8.0)),
             Divider(),
             Text(
-              "Bookings".toUpperCase(),
+              "All Bookings".toUpperCase(),
               style: TextStyle(
                 color: Colors.blue,
                 fontSize: 24.0,
@@ -93,42 +94,46 @@ class _BookingsState extends State<Bookings> {
             Padding(
               padding: EdgeInsets.all(8.0),
               child: SizedBox(
+                width: double.maxFinite,
                 height: MediaQuery.of(context).size.height - 280.0,
                 child: SingleChildScrollView(
                   child: FutureBuilder<List<Event>>(
-                      future: context.watch<BookingsProvider>().getAllEvents(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(20.0),
-                              child: CircularProgressIndicator(),
-                            ),
-                          );
-                        }
-
-                        if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                          return Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(20.0),
-                              child: Text(
-                                  "You have no Bookings yet. Click on the floating button below to create new booking"),
-                            ),
-                          );
-                        }
-                        List<Event> data = snapshot.data!.where((e) {
-                          if ((e.eventName == _searchController.text) ||
-                              (e.name == _searchController.text) ||
-                              (e.phone == _searchController.text)) {
-                            return true;
-                          }
-                          return false;
-                        }).toList();
-                        return BookingsListTable(
-                          events: data,
+                    future: context.watch<BookingsProvider>().getAllEvents(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(20.0),
+                            child: CircularProgressIndicator(),
+                          ),
                         );
-                      }),
+                      }
+
+                      if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return const Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(20.0),
+                            child: Text(
+                                "You have no Bookings yet. Click on the floating button below to create new booking"),
+                          ),
+                        );
+                      }
+                      List<Event> data = _searchController.text.isNotEmpty
+                          ? snapshot.data!.where((e) {
+                              if ((e.eventName
+                                      .contains(_searchController.text)) ||
+                                  (e.name.contains(_searchController.text)) ||
+                                  (e.phone.contains(_searchController.text))) {
+                                return true;
+                              }
+                              return false;
+                            }).toList()
+                          : snapshot.data!;
+                      return BookingsListTable(
+                        events: data,
+                      );
+                    },
+                  ),
                 ),
               ),
             )

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:ibento/data/data.dart';
 import 'package:ibento/providers/bookings_provider.dart';
 import 'package:provider/provider.dart';
-import '../widgets/widgets.dart';
+import '../dashboardMetricsCard.dart';
+import '../widgets/eventsTable.dart';
 import 'new_booking.dart';
 
 class Dashboard extends StatefulWidget {
@@ -27,7 +27,7 @@ class _DashboardState extends State<Dashboard> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 0, 42, 75),
-        title: const Text("Analytics Dashboard"),
+        title: const Text("Dashboard"),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -70,14 +70,16 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 );
               }
-              List<Event> data = snapshot.data!.where((e) {
-                if ((e.eventName == _searchController.text) ||
-                    (e.name == _searchController.text) ||
-                    (e.phone == _searchController.text)) {
-                  return true;
-                }
-                return false;
-              }).toList();
+              List<Event> data = _searchController.text.isNotEmpty
+                  ? snapshot.data!.where((e) {
+                      if ((e.eventName.contains(_searchController.text)) ||
+                          (e.name.contains(_searchController.text)) ||
+                          (e.phone.contains(_searchController.text))) {
+                        return true;
+                      }
+                      return false;
+                    }).toList()
+                  : snapshot.data!;
               return Column(
                 children: [
                   Row(
@@ -115,9 +117,9 @@ class _DashboardState extends State<Dashboard> {
                         Expanded(
                           child: TextFormField(
                             controller: _searchController,
-                            decoration: InputDecoration(
-                              label: Text(
-                                  "Booking ID, title, name, phone Number... "),
+                            decoration: const InputDecoration(
+                              hintText: "Title, name, phone Number...",
+                              label: Text("Search"),
                               border: OutlineInputBorder(),
                             ),
                           ),
@@ -125,7 +127,18 @@ class _DashboardState extends State<Dashboard> {
                         Padding(
                           padding: const EdgeInsets.only(left: 8.0),
                           child: MaterialButton(
-                            onPressed: () {},
+                            color: Colors.yellow,
+                            height: 60,
+                            child: Icon(Icons.clear),
+                            onPressed: () => setState(
+                              () => _searchController.clear(),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: MaterialButton(
+                            onPressed: () => setState(() {}),
                             child: Text("Search"),
                             minWidth: 150,
                             color: Colors.blue,

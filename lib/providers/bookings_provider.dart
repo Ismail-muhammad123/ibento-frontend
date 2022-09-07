@@ -24,6 +24,7 @@ class BookingsProvider extends ChangeNotifier {
         switch (repeatPattern.toLowerCase()) {
           case "d":
             Event ev = Event(
+              null,
               createdAt: event.createdAt,
               name: event.name,
               phone: event.phone,
@@ -57,6 +58,7 @@ class BookingsProvider extends ChangeNotifier {
             break;
           case "w":
             Event ev = Event(
+              null,
               createdAt: event.createdAt,
               name: event.name,
               phone: event.phone,
@@ -90,6 +92,7 @@ class BookingsProvider extends ChangeNotifier {
             break;
           case "m":
             Event ev = Event(
+              null,
               createdAt: event.createdAt,
               name: event.name,
               phone: event.phone,
@@ -152,9 +155,19 @@ class BookingsProvider extends ChangeNotifier {
     }
   }
 
-  // Future<Event> getEventDetails(int id) async {}
+  Future<List<String>> updateEvent(Event event) async {
+    int result = await db.updateEvent(event);
+    if (result == 0) {
+      return [
+        "a complict has been encountered",
+      ];
+    } else {
+      notifyListeners();
+      return [];
+    }
+  }
 
-  // Future<bool> updateEvent(Event event) async {}
+  // Future<Event> getEventDetails(int id) async {}
 
   // Future<bool> deleteEvent(int id) async {}
 

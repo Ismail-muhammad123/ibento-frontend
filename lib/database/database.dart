@@ -15,12 +15,12 @@ class DatabaseClass {
     var databaseFactory = databaseFactoryFfi;
     // in memory data base for testing
     Directory? appDocDir = await getApplicationSupportDirectory();
-    String path = join(appDocDir.path, 'Desktop_Booking_Record_Storage.db');
+    String path = join(appDocDir.path, 'LOCAL_DATABASE.db');
     var db = await databaseFactory.openDatabase(path);
 
     await db.execute('''
     CREATE TABLE IF NOT EXISTS $dbName (
-        id INT PRIMARY KEY,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
         eventName TEXT,
         startTime INT,
         endTime INT,
@@ -40,19 +40,42 @@ class DatabaseClass {
   insert(Event event) async {
     var db = await initiateDB();
 
-    Map<String, dynamic> event_map = event.toMap();
+    Map<String, dynamic> eventMap = event.toMap();
 
-    int from = event_map['startTime'];
-    int to = event_map['endTime'];
+    int from = eventMap['startTime'];
+    int to = eventMap['endTime'];
 
     List<Map> r = await db.rawQuery(
         "SELECT eventName FROM $dbName WHERE  (startTime BETWEEN $from AND $to) OR (endTime BETWEEN $from AND $to) OR ($from BETWEEN startTime AND endTime) OR ($to BETWEEN startTime AND endTime)");
 
-    if (r.length > 0) {
+    if (r.isNotEmpty) {
       return 0;
     }
 
     var id = await db.insert(dbName, event.toMap());
+
+    db.close();
+
+    return id;
+  }
+
+  updateEvent(Event event) async {
+    var db = await initiateDB();
+
+    Map<String, dynamic> eventMap = event.toMap();
+
+    int from = eventMap['startTime'];
+    int to = eventMap['endTime'];
+
+    List<Map> r = await db.rawQuery(
+        "SELECT eventName FROM $dbName WHERE (id!=${event.id}) AND ((startTime BETWEEN $from AND $to) OR (endTime BETWEEN $from AND $to) OR ($from BETWEEN startTime AND endTime) OR ($to BETWEEN startTime AND endTime)) ");
+
+    if (r.isNotEmpty) {
+      return 0;
+    }
+
+    var id = await db
+        .update(dbName, event.toMap(), where: "id = ?", whereArgs: [event.id]);
 
     db.close();
 

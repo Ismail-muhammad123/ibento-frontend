@@ -4,7 +4,7 @@ import 'package:ibento/pages/bookings_calender.dart';
 import 'package:ibento/pages/dashboard.dart';
 import 'package:ibento/pages/new_booking.dart';
 import 'package:ibento/pages/profile.dart';
-import './widgets/widgets.dart';
+import 'package:ibento/widgets/menuTile.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
