@@ -227,10 +227,10 @@ class _NewBookingState extends State<NewBooking> {
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
+                      children: [
                         Text(
-                          "New Booking",
-                          style: TextStyle(
+                          _updating ? "Update Booking" : "New Booking",
+                          style: const TextStyle(
                             color: Colors.blue,
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -586,7 +586,7 @@ class _NewBookingState extends State<NewBooking> {
                                         repeatPattern: repeatPattern,
                                       )
                                       .then((errors) async {
-                                    if (errors.length > 0) {
+                                    if (errors.isNotEmpty) {
                                       await showDialog(
                                         context: context,
                                         builder: (context) => AlertDialog(

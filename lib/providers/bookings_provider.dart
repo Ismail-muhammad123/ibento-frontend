@@ -13,8 +13,13 @@ class BookingsProvider extends ChangeNotifier {
     int repeatations = 0,
     String repeatPattern = "d",
   }) async {
+    if (event.from.isBefore(DateTime.now())) {
+      return [
+        "Selected Date is in the past, update the date and time to a time in the future",
+      ];
+    }
     if (repeat) {
-      List<Event> repeat_events = [];
+      List<Event> repeatEvents = [];
       DateTime startDate = event.from;
       DateTime finishDate = event.to;
 
@@ -54,7 +59,7 @@ class BookingsProvider extends ChangeNotifier {
                 finishDate.second,
               ),
             );
-            repeat_events.add(ev);
+            repeatEvents.add(ev);
             break;
           case "w":
             Event ev = Event(
@@ -88,7 +93,7 @@ class BookingsProvider extends ChangeNotifier {
                 finishDate.second,
               ),
             );
-            repeat_events.add(ev);
+            repeatEvents.add(ev);
             break;
           case "m":
             Event ev = Event(
@@ -122,7 +127,7 @@ class BookingsProvider extends ChangeNotifier {
                 finishDate.second,
               ),
             );
-            repeat_events.add(ev);
+            repeatEvents.add(ev);
             break;
           default:
         }
@@ -133,7 +138,7 @@ class BookingsProvider extends ChangeNotifier {
       List<String> errors = [];
 
       // loop through the added events
-      for (Event evt in repeat_events) {
+      for (Event evt in repeatEvents) {
         int result = await db.insert(evt);
         if (result == 0) {
           errors
@@ -156,6 +161,11 @@ class BookingsProvider extends ChangeNotifier {
   }
 
   Future<List<String>> updateEvent(Event event) async {
+    if (event.from.isBefore(DateTime.now())) {
+      return [
+        "Selected Date is in the past, update the date and time to a time in the future",
+      ];
+    }
     int result = await db.updateEvent(event);
     if (result == 0) {
       return [

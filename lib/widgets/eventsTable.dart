@@ -56,7 +56,9 @@ class _BookingsListTableState extends State<BookingsListTable> {
             MaterialButton(
               onPressed: selectedEvent == null
                   ? null
-                  : selectedEvent!.canceled || selectedEvent!.attended
+                  : selectedEvent!.canceled ||
+                          selectedEvent!.attended ||
+                          selectedEvent!.isMissed
                       ? null
                       : () async {
                           await showDialog(
@@ -150,7 +152,9 @@ class _BookingsListTableState extends State<BookingsListTable> {
             MaterialButton(
               onPressed: selectedEvent == null
                   ? null
-                  : selectedEvent!.canceled || selectedEvent!.attended
+                  : selectedEvent!.canceled ||
+                          selectedEvent!.attended ||
+                          selectedEvent!.isMissed
                       ? null
                       : () async {
                           await showDialog(
