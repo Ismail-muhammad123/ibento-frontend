@@ -214,419 +214,437 @@ class _NewBookingState extends State<NewBooking> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(18.0),
-      child: Form(
-        child: _loading
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Text(
-                        "New Booking",
-                        style: TextStyle(
-                          color: Colors.blue,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Divider(),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextFormField(
-                            controller: _nameController,
-                            decoration: InputDecoration(
-                              label: Text("Name"),
-                            ),
+    return SizedBox(
+      width: 500.0,
+      child: Padding(
+        padding: const EdgeInsets.all(18.0),
+        child: Form(
+          child: _loading
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Text(
+                          "New Booking",
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextFormField(
-                            keyboardType: TextInputType.phone,
-                            controller: _phoneNumberController,
-                            decoration: InputDecoration(
-                              label: Text("Phone Number"),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextFormField(
-                            controller: _emailController,
-                            keyboardType: TextInputType.emailAddress,
-                            decoration: InputDecoration(
-                              label: Text("Email (optionl)"),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextFormField(
-                            controller: _addressController,
-                            keyboardType: TextInputType.streetAddress,
-                            decoration: InputDecoration(
-                              label: Text("Address (optional) "),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextFormField(
-                            controller: _eventNameController,
-                            decoration: InputDecoration(
-                              label: Text("Booking Title (optional)"),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextFormField(
-                            controller: _dateController,
-                            onTap: () {
-                              _selectDate(context).then(
-                                (value) => setState(
-                                  () => _dateController.text = getDate(),
-                                ),
-                              );
-                            },
-                            decoration: InputDecoration(
-                              label: Text("Event Date"),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextFormField(
-                            // initialValue: getTime(
-                            //   TimeOfDay(
-                            //     hour: widget.dateTime!.hour,
-                            //     minute: widget.dateTime!.minute,
-                            //   ),
-                            // ),
-                            controller: _startTimeController,
-                            onTap: () => _selectStartTime(context).then(
-                              (value) => setState(
-                                () {
-                                  eventStartTime = value;
-                                  _startTimeController.text = getTime(value);
-                                },
+                      ],
+                    ),
+                    Divider(),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextFormField(
+                              controller: _nameController,
+                              decoration: InputDecoration(
+                                label: Text("Name (Required)"),
                               ),
                             ),
-                            decoration: InputDecoration(
-                              label: Text("Start Time"),
-                            ),
                           ),
                         ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextFormField(
-                            controller: _finishTimeController,
-                            onTap: () => _selectFinishTime(context).then(
-                              (value) => setState(
-                                () {
-                                  eventFinishTime = value;
-                                  _finishTimeController.text = getTime(value);
-                                },
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextFormField(
+                              keyboardType: TextInputType.phone,
+                              controller: _phoneNumberController,
+                              decoration: InputDecoration(
+                                label: Text("Phone Number (Required)"),
                               ),
                             ),
-                            decoration: InputDecoration(
-                              label: Text("Finish Time"),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextFormField(
+                              controller: _emailController,
+                              keyboardType: TextInputType.emailAddress,
+                              decoration: InputDecoration(
+                                label: Text("Email (optionl)"),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text("Repeat:"),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Checkbox(
-                          value: repeat,
-                          onChanged: _updating
-                              ? null
-                              : (val) => setState(
-                                    () => repeat = val as bool,
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextFormField(
+                              controller: _addressController,
+                              keyboardType: TextInputType.streetAddress,
+                              decoration: InputDecoration(
+                                label: Text("Address (optional) "),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextFormField(
+                              controller: _eventNameController,
+                              decoration: InputDecoration(
+                                label: Text("Booking Title (Required)"),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextFormField(
+                              controller: _dateController,
+                              onTap: () {
+                                _selectDate(context).then(
+                                  (value) => setState(
+                                    () => _dateController.text = getDate(),
                                   ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: DropdownButton(
-                            value: repeatPattern,
-                            items: [
-                              DropdownMenuItem(
-                                child: Text("Daily"),
-                                value: "d",
-                              ),
-                              DropdownMenuItem(
-                                child: Text("Weekly"),
-                                value: "w",
-                              ),
-                              DropdownMenuItem(
-                                child: Text("Monthly"),
-                                value: "m",
-                              ),
-                            ],
-                            onChanged: repeat
-                                ? (v) =>
-                                    setState(() => repeatPattern = v as String)
-                                : null,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextFormField(
-                            controller: _repeatationsController,
-                            enabled: repeat,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly,
-                            ],
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              suffix: Text("times"),
-                              label: Text("Number of repetations"),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextFormField(
-                            controller: _amountPaidController,
-                            keyboardType: TextInputType.number,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly,
-                            ],
-                            decoration: InputDecoration(
-                              label: Text("Amount Paid"),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextFormField(
-                            controller: _balanceController,
-                            keyboardType: TextInputType.number,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly,
-                            ],
-                            decoration: InputDecoration(
-                              label: Text("Balance"),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Spacer(),
-                  MaterialButton(
-                    onPressed: _saved
-                        ? null
-                        : _updating
-                            ? () async {
-                                // update event
-                                if (_eventNameController.text.isEmpty) {
-                                  await showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                      content: Text(
-                                          "Event Name Field must not be empty"),
-                                      actions: [
-                                        MaterialButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: Text("okay".toUpperCase()),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                  return;
-                                }
-
-                                setState(() {
-                                  _loading = true;
-                                });
-                                List<String> errors = await context
-                                    .read<BookingsProvider>()
-                                    .updateEvent(
-                                      _getNewEvent(),
-                                    );
-                                if (errors.length > 0) {
-                                  await showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                      title: Row(
-                                        children: [
-                                          Icon(
-                                            Icons.error,
-                                            color: Colors.red,
-                                          ),
-                                          Text(
-                                            "Error",
-                                            style: TextStyle(
-                                              fontSize: 18.0,
-                                              color: Colors.red,
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      actions: [
-                                        MaterialButton(
-                                          onPressed: () =>
-                                              Navigator.of(context).pop(),
-                                          child: Text("OKAY"),
-                                          color: Colors.blue,
-                                        )
-                                      ],
-                                      content: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children:
-                                            errors.map((e) => Text(e)).toList(),
-                                      ),
-                                    ),
-                                  );
-                                }
-                                setState(() {
-                                  _loading = false;
-                                  _saved = true;
-                                });
-                              }
-                            : () async {
-                                // save new event
-                                if (_eventNameController.text.isEmpty) {
-                                  await showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                      content: Text(
-                                          "Event Name Field must not be empty"),
-                                      actions: [
-                                        MaterialButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: Text("okay".toUpperCase()),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                  return;
-                                }
-
-                                setState(() {
-                                  _loading = true;
-                                });
-                                List<String> errors = await context
-                                    .read<BookingsProvider>()
-                                    .addEvent(
-                                      _getNewEvent(),
-                                      repeat: repeat,
-                                      repeatations: _repeatationsController
-                                              .text.isNotEmpty
-                                          ? int.parse(
-                                              _repeatationsController.text)
-                                          : 0,
-                                      repeatPattern: repeatPattern,
-                                    );
-                                if (errors.length > 0) {
-                                  await showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                      title: Row(
-                                        children: [
-                                          Icon(
-                                            Icons.error,
-                                            color: Colors.red,
-                                          ),
-                                          Text(
-                                            "Error",
-                                            style: TextStyle(
-                                              fontSize: 18.0,
-                                              color: Colors.red,
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      actions: [
-                                        MaterialButton(
-                                          onPressed: () =>
-                                              Navigator.of(context).pop(),
-                                          child: Text("OKAY"),
-                                          color: Colors.blue,
-                                        )
-                                      ],
-                                      content: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children:
-                                            errors.map((e) => Text(e)).toList(),
-                                      ),
-                                    ),
-                                  );
-                                }
-                                setState(() {
-                                  _loading = false;
-                                  _saved = true;
-                                });
+                                );
                               },
-                    height: 50,
-                    minWidth: 250,
-                    color: Colors.blue,
-                    child: Text(_saved
-                        ? "Finished"
-                        : _updating
-                            ? "Update"
-                            : "Save"),
-                  )
-                ],
-              ),
+                              decoration: InputDecoration(
+                                label: Text("Event Date"),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextFormField(
+                              // initialValue: getTime(
+                              //   TimeOfDay(
+                              //     hour: widget.dateTime!.hour,
+                              //     minute: widget.dateTime!.minute,
+                              //   ),
+                              // ),
+                              controller: _startTimeController,
+                              onTap: () => _selectStartTime(context).then(
+                                (value) => setState(
+                                  () {
+                                    eventStartTime = value;
+                                    _startTimeController.text = getTime(value);
+                                  },
+                                ),
+                              ),
+                              decoration: InputDecoration(
+                                label: Text("Start Time"),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextFormField(
+                              controller: _finishTimeController,
+                              onTap: () => _selectFinishTime(context).then(
+                                (value) => setState(
+                                  () {
+                                    eventFinishTime = value;
+                                    _finishTimeController.text = getTime(value);
+                                  },
+                                ),
+                              ),
+                              decoration: InputDecoration(
+                                label: Text("Finish Time"),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text("Repeat:"),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Checkbox(
+                            value: repeat,
+                            onChanged: _updating
+                                ? null
+                                : (val) => setState(
+                                      () => repeat = val as bool,
+                                    ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: DropdownButton(
+                              value: repeatPattern,
+                              items: [
+                                DropdownMenuItem(
+                                  child: Text("Daily"),
+                                  value: "d",
+                                ),
+                                DropdownMenuItem(
+                                  child: Text("Weekly"),
+                                  value: "w",
+                                ),
+                                DropdownMenuItem(
+                                  child: Text("Monthly"),
+                                  value: "m",
+                                ),
+                              ],
+                              onChanged: repeat
+                                  ? (v) => setState(
+                                      () => repeatPattern = v as String)
+                                  : null,
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextFormField(
+                              controller: _repeatationsController,
+                              enabled: repeat,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
+                              keyboardType: TextInputType.number,
+                              decoration: InputDecoration(
+                                suffix: Text("times"),
+                                label: Text("Number of repetations"),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextFormField(
+                              controller: _amountPaidController,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
+                              decoration: InputDecoration(
+                                label: Text("Amount Paid"),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextFormField(
+                              controller: _balanceController,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
+                              decoration: InputDecoration(
+                                label: Text("Balance"),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Spacer(),
+                    MaterialButton(
+                      onPressed: _saved
+                          ? null
+                          : _updating
+                              ? () async {
+                                  // update event
+                                  if (_eventNameController.text.isEmpty) {
+                                    await showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        content: Text(
+                                            "Event Name Field must not be empty"),
+                                        actions: [
+                                          MaterialButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text("okay".toUpperCase()),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                    return;
+                                  }
+
+                                  setState(() {
+                                    _loading = true;
+                                  });
+                                  await context
+                                      .read<BookingsProvider>()
+                                      .updateEvent(
+                                        _getNewEvent(),
+                                      )
+                                      .then((errors) async {
+                                    if (errors.isNotEmpty) {
+                                      await showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          title: Row(
+                                            children: const [
+                                              Icon(
+                                                Icons.error,
+                                                color: Colors.red,
+                                              ),
+                                              Text(
+                                                "Error",
+                                                style: TextStyle(
+                                                  fontSize: 18.0,
+                                                  color: Colors.red,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          actions: [
+                                            MaterialButton(
+                                              onPressed: () =>
+                                                  Navigator.of(context).pop(),
+                                              child: Text("OKAY"),
+                                              color: Colors.blue,
+                                            )
+                                          ],
+                                          content: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: errors
+                                                .map((e) => Text(e))
+                                                .toList(),
+                                          ),
+                                        ),
+                                      ).then((value) => setState(() {
+                                            _loading = false;
+                                          }));
+                                    } else {
+                                      setState(() {
+                                        _loading = false;
+                                        _saved = true;
+                                      });
+                                      Navigator.of(context).pop();
+                                    }
+                                  });
+                                }
+                              : () async {
+                                  // save new event
+                                  if (_eventNameController.text.isEmpty) {
+                                    await showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        content: Text(
+                                            "Event Name Field must not be empty"),
+                                        actions: [
+                                          MaterialButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text("okay".toUpperCase()),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                    return;
+                                  }
+
+                                  setState(() {
+                                    _loading = true;
+                                  });
+                                  await context
+                                      .read<BookingsProvider>()
+                                      .addEvent(
+                                        _getNewEvent(),
+                                        repeat: repeat,
+                                        repeatations: _repeatationsController
+                                                .text.isNotEmpty
+                                            ? int.parse(
+                                                _repeatationsController.text)
+                                            : 0,
+                                        repeatPattern: repeatPattern,
+                                      )
+                                      .then((errors) async {
+                                    if (errors.length > 0) {
+                                      await showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          title: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.error,
+                                                color: Colors.red,
+                                              ),
+                                              Text(
+                                                "Error",
+                                                style: TextStyle(
+                                                  fontSize: 18.0,
+                                                  color: Colors.red,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          actions: [
+                                            MaterialButton(
+                                              onPressed: () =>
+                                                  Navigator.of(context).pop(),
+                                              child: Text("OKAY"),
+                                              color: Colors.blue,
+                                            )
+                                          ],
+                                          content: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: errors
+                                                .map((e) => Text(e))
+                                                .toList(),
+                                          ),
+                                        ),
+                                      );
+                                      setState(() {
+                                        _loading = false;
+                                      });
+                                    } else {
+                                      setState(() {
+                                        _loading = false;
+                                        _saved = true;
+                                      });
+                                      Navigator.of(context).pop();
+                                    }
+                                  });
+                                },
+                      height: 50,
+                      minWidth: 250,
+                      color: Colors.blue,
+                      child: Text(_saved
+                          ? "Finished"
+                          : _updating
+                              ? "Update"
+                              : "Save"),
+                    )
+                  ],
+                ),
+        ),
       ),
     );
   }

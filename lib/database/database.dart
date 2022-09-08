@@ -15,7 +15,7 @@ class DatabaseClass {
     var databaseFactory = databaseFactoryFfi;
     // in memory data base for testing
     Directory? appDocDir = await getApplicationSupportDirectory();
-    String path = join(appDocDir.path, 'IBENTO_LOCAL_DATABASE.db');
+    String path = join(appDocDir.path, 'DATABASE.db');
     var db = await databaseFactory.openDatabase(path);
 
     await db.execute('''
@@ -48,7 +48,7 @@ class DatabaseClass {
     int to = eventMap['endTime'];
 
     List<Map> r = await db.rawQuery(
-        "SELECT eventName FROM $dbName WHERE  (startTime BETWEEN $from AND $to) OR (endTime BETWEEN $from AND $to) OR ($from BETWEEN startTime AND endTime) OR ($to BETWEEN startTime AND endTime)");
+        "SELECT eventName FROM $dbName WHERE (startTime BETWEEN $from AND $to) OR (endTime BETWEEN $from AND $to) OR ($from BETWEEN startTime AND endTime) OR ($to BETWEEN startTime AND endTime)");
 
     if (r.isNotEmpty) {
       return 0;
@@ -88,7 +88,6 @@ class DatabaseClass {
     var db = await initiateDB();
 
     List<Map<String, dynamic>> result = await db.query(dbName);
-
     db.close();
 
     return result.map((e) => Event.fromMap(e)).toList();

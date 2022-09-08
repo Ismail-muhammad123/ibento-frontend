@@ -96,8 +96,8 @@ class Event {
       address: eventMap["address"],
       amountPaid: eventMap["amountPaid"],
       balance: eventMap["balance"],
-      attended: eventMap['attended'] == 0 ? false : true,
-      canceled: eventMap['attended'] == 0 ? false : true,
+      attended: eventMap['attended'] == 1,
+      canceled: eventMap['canceled'] == 1,
     );
   }
 
@@ -120,9 +120,36 @@ class Event {
     if (id != null) {
       data['id'] = id;
     }
-
     return data;
   }
+
+  getStatusColor() {
+    if (canceled) {
+      return Colors.red;
+    } else if (attended == false &&
+        canceled == false &&
+        to.isBefore(
+          DateTime.now(),
+        )) {
+      return Colors.orange;
+    } else if (attended) {
+      return Colors.green;
+    } else {
+      return Colors.blue;
+    }
+  }
+
+  get isMissed => (attended == false &&
+      canceled == false &&
+      to.isBefore(
+        DateTime.now(),
+      ));
+
+  get isUpcomming => (!attended &&
+      !canceled &&
+      to.isAfter(
+        DateTime.now(),
+      ));
 
   int? id;
 
@@ -142,7 +169,9 @@ class Event {
 
   /// IsAllDay which is equivalent to isAllDay property of [Appointment].
   bool isAllDay;
+
   bool attended;
+
   bool canceled;
 
   String name, phone, email, address;

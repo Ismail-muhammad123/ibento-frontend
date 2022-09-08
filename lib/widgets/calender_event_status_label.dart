@@ -19,7 +19,9 @@ class CalenderBookingStatusLabel extends StatelessWidget {
             width: 20,
             height: 20,
             decoration: BoxDecoration(
-                color: color, borderRadius: BorderRadius.circular(10)),
+              color: color,
+              borderRadius: BorderRadius.circular(10),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),

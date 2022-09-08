@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-
-
 class DashboardMetricsCard extends StatelessWidget {
   final int value;
   final String label;
-  const DashboardMetricsCard({
+  Color? backgroundColor;
+  DashboardMetricsCard({
     Key? key,
+    this.backgroundColor = Colors.blue,
     required this.label,
     required this.value,
   }) : super(key: key);
@@ -20,7 +20,7 @@ class DashboardMetricsCard extends StatelessWidget {
         alignment: Alignment.center,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5.0),
-          color: Colors.blue,
+          color: backgroundColor ?? Colors.blue,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
