@@ -47,25 +47,18 @@ class DatabaseClass {
     int from = eventMap['startTime'];
     int to = eventMap['endTime'];
 
-<<<<<<< HEAD
     // check if there is any bookong that complicts the date of the new event and that is not canceled.
     List<Map> r = await db.rawQuery(
         "SELECT eventName FROM $dbName WHERE (canceled = 0) AND ((startTime BETWEEN $from AND $to) OR (endTime BETWEEN $from AND $to) OR ($from BETWEEN startTime AND endTime) OR ($to BETWEEN startTime AND endTime))");
 
     // if yes, return with a vaue of 0
-=======
-    List<Map> r = await db.rawQuery(
-        "SELECT eventName FROM $dbName WHERE (startTime BETWEEN $from AND $to) OR (endTime BETWEEN $from AND $to) OR ($from BETWEEN startTime AND endTime) OR ($to BETWEEN startTime AND endTime)");
 
->>>>>>> eb31bf182700d0e2750699954d460bca41200198
     if (r.isNotEmpty) {
       return 0;
     }
 
-<<<<<<< HEAD
     // if not, insert the event into data base
-=======
->>>>>>> eb31bf182700d0e2750699954d460bca41200198
+
     var id = await db.insert(dbName, event.toMap());
 
     db.close();
