@@ -165,7 +165,7 @@ class _DashboardState extends State<Dashboard> {
                   Padding(padding: EdgeInsets.all(8.0)),
                   Divider(),
                   Text(
-                    "Recent Bookings".toUpperCase(),
+                    "Bookings".toUpperCase(),
                     style: TextStyle(
                       color: Colors.blue,
                       fontSize: 24.0,

@@ -84,7 +84,7 @@ class DatabaseClass {
     return id;
   }
 
-  fetchEvents() async {
+  Future<List<Event>> fetchEvents() async {
     var db = await initiateDB();
 
     List<Map<String, dynamic>> result = await db.query(dbName);

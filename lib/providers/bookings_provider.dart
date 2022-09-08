@@ -168,7 +168,4 @@ class BookingsProvider extends ChangeNotifier {
   }
 
   // Future<Event> getEventDetails(int id) async {}
-
-  // Future<bool> deleteEvent(int id) async {}
-
 }

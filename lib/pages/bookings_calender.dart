@@ -90,6 +90,7 @@ class _BookingsCalenderState extends State<BookingsCalender> {
                     children: [
                       Expanded(
                         child: SfCalendar(
+                          firstDayOfWeek: 1,
                           controller: _calendarController,
                           onTap: (details) {
                             DateTime date = details.date!;
