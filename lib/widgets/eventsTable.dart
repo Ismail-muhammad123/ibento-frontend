@@ -30,6 +30,7 @@ class _BookingsListTableState extends State<BookingsListTable> {
             MaterialButton(
               onPressed: selectedEvent == null
                   ? null
+<<<<<<< HEAD
                   : () async {
                       await showDialog(
                         context: context,
@@ -37,6 +38,10 @@ class _BookingsListTableState extends State<BookingsListTable> {
                           child: BookingDetails(event: selectedEvent!),
                         ),
                       );
+=======
+                  : () {
+                      // TODO create open details
+>>>>>>> eb31bf182700d0e2750699954d460bca41200198
                     },
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -400,7 +405,11 @@ class _BookingsListTableState extends State<BookingsListTable> {
                           ),
                           DataCell(
                             Text(
+<<<<<<< HEAD
                               "#${(event.id ?? 0).toString().padLeft(5, "0")}",
+=======
+                              (event.id ?? 0).toString(),
+>>>>>>> eb31bf182700d0e2750699954d460bca41200198
                             ),
                           ),
                           DataCell(

@@ -176,4 +176,9 @@ class BookingsProvider extends ChangeNotifier {
       return [];
     }
   }
+<<<<<<< HEAD
+=======
+
+  // Future<Event> getEventDetails(int id) async {}
+>>>>>>> eb31bf182700d0e2750699954d460bca41200198
 }
