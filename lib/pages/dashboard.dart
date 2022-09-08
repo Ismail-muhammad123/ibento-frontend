@@ -178,7 +178,7 @@ class _DashboardState extends State<Dashboard> {
                     child: SizedBox(
                       width: double.maxFinite,
                       child: BookingsListTable(
-                        events: data,
+                        events: data.sublist(0, data.length > 20 ? 20 : null),
                       ),
                     ),
                   ),
