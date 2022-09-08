@@ -86,7 +86,7 @@ class _DashboardState extends State<Dashboard> {
                     Expanded(
                       child: DashboardMetricsCard(
                         backgroundColor: Colors.grey,
-                        label: "Total Bookings",
+                        label: "Total",
                         value: data.length,
                       ),
                     ),
@@ -101,21 +101,21 @@ class _DashboardState extends State<Dashboard> {
                     Expanded(
                       child: DashboardMetricsCard(
                           backgroundColor: Colors.green,
-                          label: "Attended Bookings",
+                          label: "Attended",
                           value:
                               data.where((element) => element.attended).length),
                     ),
                     Expanded(
                       child: DashboardMetricsCard(
                         backgroundColor: Colors.red,
-                        label: "Cancelations",
+                        label: "Canceled",
                         value: data.where((element) => element.canceled).length,
                       ),
                     ),
                     Expanded(
                       child: DashboardMetricsCard(
                         backgroundColor: Colors.orange,
-                        label: "Missed Bookings",
+                        label: "Missed",
                         value: data.where((element) => element.isMissed).length,
                       ),
                     ),
@@ -165,7 +165,7 @@ class _DashboardState extends State<Dashboard> {
                 Padding(padding: EdgeInsets.all(8.0)),
                 Divider(),
                 Text(
-                  "Bookings".toUpperCase(),
+                  "Recent Bookings".toUpperCase(),
                   style: TextStyle(
                     color: Colors.blue,
                     fontSize: 24.0,
