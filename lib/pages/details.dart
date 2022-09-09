@@ -8,7 +8,8 @@ import 'package:path_provider/path_provider.dart';
 import '../data/data.dart';
 import 'package:path/path.dart' as path;
 import 'dart:ui' as ui;
-// import 'package:pdf/widgets.dart' as pw;
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
 
 class BookingDetails extends StatefulWidget {
   BookingDetails({
@@ -49,6 +50,62 @@ class _BookingDetailsState extends State<BookingDetails> {
 
     // var directory = (await getApplicationDocumentsDirectory()).path;
 
+    var dir = Directory(
+            path.join((await getTemporaryDirectory()).path, 'booking-reciepts'))
+        .create()
+        .then((value) => value.path);
+
+    File imgFile = File(path.join(await dir,
+        'temp-reciept-${event.id}-${event.eventName}-${event.name}.jpg'));
+
+    var file =
+        await imgFile.writeAsBytes(pngBytes!).then((value) => value.path);
+
+    var bs64 = base64Encode(pngBytes);
+    debugPrint(bs64.length.toString());
+
+    // Create a pdf file and add a page with the image in it's center
+    final pdf = pw.Document();
+    var imageFile = pw.MemoryImage(imgFile.readAsBytesSync());
+
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) {
+          return pw.Column(
+            mainAxisAlignment: pw.MainAxisAlignment.start,
+            children: [
+              pw.Image(
+                imageFile,
+              ),
+            ],
+          ); // Center
+        },
+      ),
+    ); // Page
+
+    // Print the pdf created
+
+    var r = await Printing.layoutPdf(
+      onLayout: (format) async => pdf.save(),
+      usePrinterSettings: true,
+    );
+  }
+
+  Future _saveReciept() async {
+    Event event = widget.event;
+    RenderRepaintBoundary? boundary =
+        genKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+    ui.Image? image = await boundary?.toImage();
+    ByteData? byteData = await image?.toByteData(
+      format: ui.ImageByteFormat.png,
+    );
+    // Read the image as bytes
+    Uint8List? pngBytes = byteData?.buffer.asUint8List();
+
+    // Write the image bytes to a temporary file
+
+    // var directory = (await getApplicationDocumentsDirectory()).path;
+
     var dir = Directory(path.join(
             (await getApplicationDocumentsDirectory()).path,
             'booking-reciepts'))
@@ -57,7 +114,7 @@ class _BookingDetailsState extends State<BookingDetails> {
     File imgFile = File(path.join(
         await dir, 'Reciept-${event.id}-${event.eventName}-${event.name}.jpg'));
 
-    return await imgFile.writeAsBytes(pngBytes!);
+    return await imgFile.writeAsBytes(pngBytes!).then((value) => value.path);
   }
 
   @override
@@ -307,11 +364,55 @@ class _BookingDetailsState extends State<BookingDetails> {
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: MaterialButton(
-              minWidth: double.maxFinite,
-              onPressed: () async => await _printReciept(),
-              color: Colors.blue,
-              child: Text("Print"),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: MaterialButton(
+                      minWidth: 100,
+                      onPressed: () async => await _printReciept(),
+                      color: Colors.blue,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Icon(
+                          Icons.print,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: MaterialButton(
+                    minWidth: 100,
+                    onPressed: () async => await _saveReciept().then(
+                      (value) async => await showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          actions: [
+                            MaterialButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              child: Text("OKAY"),
+                            ),
+                          ],
+                          content: Text(
+                              "Reciept image saved successfully at $value"),
+                        ),
+                      ),
+                    ),
+                    color: Colors.blue,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Icon(
+                        Icons.save,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
