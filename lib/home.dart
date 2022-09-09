@@ -136,12 +136,12 @@ class _HomePageState extends State<HomePage> {
                   //   expanded: menuExpanded,
                   // ),
                   const Spacer(),
-                  MenuTile(
-                    title: "Logout",
-                    icon: Icons.logout,
-                    color: Colors.red,
-                    expanded: menuExpanded,
-                  )
+                  // MenuTile(
+                  //   title: "Logout",
+                  //   icon: Icons.logout,
+                  //   color: Colors.red,
+                  //   expanded: menuExpanded,
+                  // ),
                 ],
               ),
             ),
