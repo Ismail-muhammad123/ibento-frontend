@@ -1,5 +1,13 @@
+import 'dart:io';
+
+import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:ibento/pages/business_information_form.dart';
+import 'package:ibento/pages/details.dart';
+import 'package:ibento/providers/bookings_provider.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:path/path.dart' as path;
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -9,6 +17,45 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  bool _exporting = false;
+
+  Future _exportCsv() async {
+    var datetime = DateTime.now()
+        .toString()
+        .replaceAll(RegExp(r' '), "-")
+        .replaceAll(RegExp(r':'), "-");
+    // fetxh records and convert them to maps
+    List<Map<String, dynamic>> bookings =
+        await context.read<BookingsProvider>().getAllEvents().then(
+              (value) => value.map((e) => e.toMap()).toList(),
+            );
+
+    List<List<dynamic>> rows = [];
+
+    // add the heading of the csv file
+
+    rows.add(bookings.first.keys.toList());
+
+    // add the list of the values of each of the records to the rows
+
+    rows.addAll(bookings.map((e) => e.values.toList()));
+
+    // convert the list of rows o csv string
+    String csv = const ListToCsvConverter().convert(rows);
+
+    // create path and a csv file
+    String dir = await Directory(
+      path.join(
+        (await getDownloadsDirectory())!.path,
+        "Booking-records",
+      ),
+    ).create().then((value) => value.path);
+
+    File f = File(path.join(dir, "export-bookings-$datetime.csv"));
+
+    await f.writeAsString(csv);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,40 +123,66 @@ class _ProfilePageState extends State<ProfilePage> {
                           Text("Address: Kano State Nigeria"),
                           Text("Email: ismaeelmuhammad123@gmail.com"),
                           Text("Phone Number: 08163351109"),
-                          // Padding(
-                          //   padding: const EdgeInsets.all(8.0),
-                          //   child: MaterialButton(
-                          //     color: Colors.blue,
-                          //     onPressed: () async {
-                          //       await showDialog(
-                          //         context: context,
-                          //         builder: (context) =>
-                          //             BusinessInformationForm(),
-                          //       );
-                          //     },
-                          //     child: Row(
-                          //       mainAxisSize: MainAxisSize.min,
-                          //       children: [
-                          //         Padding(
-                          //           padding: const EdgeInsets.all(8.0),
-                          //           child: Text(
-                          //             "Edit Company information",
-                          //             style: TextStyle(color: Colors.white),
-                          //           ),
-                          //         ),
-                          //         Padding(
-                          //           padding: EdgeInsets.only(left: 8.0),
-                          //         ),
-                          //         Icon(
-                          //           Icons.open_in_new,
-                          //           color: Colors.white,
-                          //         ),
-                          //       ],
-                          //     ),
-                          //   ),
-                          // )
                           Padding(
-                            padding: EdgeInsets.symmetric(vertical: 12.0),
+                            padding: const EdgeInsets.all(8.0),
+                            child: MaterialButton(
+                              color: Colors.blue,
+                              onPressed: _exporting
+                                  ? null
+                                  : () async {
+                                      setState(() {
+                                        _exporting = true;
+                                      });
+                                      await _exportCsv()
+                                          .then(
+                                            (value) => setState(
+                                                () => _exporting = false),
+                                          )
+                                          .then(
+                                            (value) async => await showDialog(
+                                              context: context,
+                                              builder: (context) => AlertDialog(
+                                                content: Text(
+                                                  "File Downloaded",
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                                actions: [
+                                                  MaterialButton(
+                                                    onPressed: () =>
+                                                        Navigator.of(context)
+                                                            .pop(),
+                                                    child: Text("OKAY"),
+                                                    color: Colors.blue,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                    },
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      _exporting
+                                          ? "exporting, please wait"
+                                          : "Export Records as CSV file",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 8.0),
+                                  ),
+                                  _exporting
+                                      ? CircularProgressIndicator()
+                                      : Icon(
+                                          Icons.download,
+                                          color: Colors.white,
+                                        ),
+                                ],
+                              ),
+                            ),
                           ),
                         ],
                       ),
